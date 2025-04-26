@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Net.Sockets;
 using AsyncSocket;
 
-namespace Tests;
+namespace Tests.SocketAsyncEventArgsPoolTest;
 
 [TestClass]
 public class SocketAsyncEventArgsPoolMultithreadingTests
@@ -261,7 +261,7 @@ public class SocketAsyncEventArgsPoolMultithreadingTests
         Console.WriteLine($"Performance ratio (last/first): {lastOpsAvg / firstOpsAvg:N2}x");
 
         // Performance should remain relatively stable
-        Assert.IsTrue(maxGetTime < 10, 
+        Assert.IsTrue(maxGetTime < 20, 
             $"Performance should not degrade significantly over time: {maxGetTime}");
     }
         

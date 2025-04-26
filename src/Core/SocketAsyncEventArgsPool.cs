@@ -3,22 +3,31 @@ using System.Net.Sockets;
 
 namespace AsyncSocket;
 
-public class SocketAsyncEventArgsPool : IDisposable
+public class SocketAsyncEventArgsPool : ISocketAsyncEventArgsPool, IDisposable
 {
     private readonly ConcurrentStack<SocketAsyncEventArgs> _pool = new();
     private bool _disposed;
+
+    public SocketAsyncEventArgsPool(int warmup = 0)
+    {
+        for (var i = 0; i < warmup; i++)
+        {
+            var socket = Get();
+            Return(socket);
+        }
+    }
+
+    public int Count => _pool.Count;
 
     public SocketAsyncEventArgs Get()
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
 
-        if (_pool.TryPop(out var args))
-        {
-            return args;
-        }
-        return new SocketAsyncEventArgs();
+        return _pool.TryPop(out var args) 
+            ? args 
+            : new SocketAsyncEventArgs()
+            ;
     }
-
     public void Return(SocketAsyncEventArgs item)
     {
         ObjectDisposedException.ThrowIf(_disposed, this);

@@ -1,0 +1,436 @@
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
+using AsyncSocket;
+using AsyncSocket.Properties;
+using Moq;
+
+namespace Tests.ClientSessionTest
+{
+    [TestClass]
+    public class ClientSessionExceptionTests
+    {
+        private const char Delimiter = '\n';
+        private const int BufferSize = 1024;
+        private SocketAsyncEventArgsPool _argsPool;
+        private CancellationTokenSource _cts;
+
+        [TestInitialize]
+        public void Setup()
+        {
+            _argsPool = new SocketAsyncEventArgsPool(10);
+            _cts = new CancellationTokenSource();
+        }
+
+        [TestCleanup]
+        public void Cleanup()
+        {
+            _cts.Cancel();
+            _cts.Dispose();
+        }
+
+        [TestMethod]
+        public async Task HandlesSocketErrorDuringReceive()
+        {
+            // Arrange
+            var mockSocket = new Mock<Socket>(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            
+            // Set up mock to throw on receive
+            var socketException = new SocketException((int)SocketError.ConnectionReset);
+            mockSocket.Setup(s => s.ReceiveAsync(It.IsAny<SocketAsyncEventArgs>()))
+                .Callback<SocketAsyncEventArgs>(args => 
+                {
+                    args.SocketError = SocketError.ConnectionReset;
+                    // args.Completed?.Invoke(mockSocket.Object, args);
+                })
+                .Returns(false);
+            
+            bool disconnectEventRaised = false;
+            Guid sessionId = Guid.NewGuid();
+            
+            var session = new ClientSession(sessionId, mockSocket.Object, Delimiter, BufferSize, _argsPool);
+            session.Disconnected += (sender, id) => 
+            {
+                disconnectEventRaised = true;
+                Assert.AreEqual(sessionId, id);
+            };
+            
+            // Act
+            var sessionTask = session.StartAsync(_cts.Token);
+            
+            // Wait for the session to handle the error and complete
+            await Task.WhenAny(sessionTask, Task.Delay(1000));
+            
+            // Assert
+            Assert.IsTrue(disconnectEventRaised, "Disconnected event should be raised on socket error");
+            mockSocket.Verify(s => s.Close(), Times.Once, "Socket should be closed after error");
+        }
+
+        [TestMethod]
+        public async Task HandlesSocketErrorDuringSend()
+        {
+            // Arrange
+            var mockSocket = new Mock<Socket>(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            
+            // Set up mock for normal receive but throw on send
+            mockSocket.Setup(s => s.ReceiveAsync(It.IsAny<SocketAsyncEventArgs>()))
+                .Callback<SocketAsyncEventArgs>(args => 
+                {
+                    args.SetBuffer(new byte[] { 65 }, 0, 1); // Just some dummy data
+                    args.SocketError = SocketError.Success;
+                    //args.BytesTransferred = 1;
+                    //args.Completed?.Invoke(mockSocket.Object, args);
+                })
+                .Returns(false);
+            
+            mockSocket.Setup(s => s.SendAsync(It.IsAny<SocketAsyncEventArgs>()))
+                .Callback<SocketAsyncEventArgs>(args => 
+                {
+                    args.SocketError = SocketError.ConnectionAborted;
+                    //args.Completed?.Invoke(mockSocket.Object, args);
+                })
+                .Returns(false);
+            
+            var session = new ClientSession(Guid.NewGuid(), mockSocket.Object, Delimiter, BufferSize, _argsPool);
+            var sessionTask = session.StartAsync(_cts.Token);
+            
+            // Wait a bit to ensure session is started
+            await Task.Delay(100);
+            
+            // Act & Assert
+            await Assert.ThrowsExceptionAsync<SocketException>(async () =>
+            {
+                await session.SendAsync("Test message");
+            });
+            
+            // Clean up
+            await session.StopAsync();
+        }
+
+        [TestMethod]
+        public async Task StopAsync_CanBeCalledMultipleTimes()
+        {
+            // Arrange
+            var (session, clientSocket, sessionTask) = await CreateClientSessionPairAsync();
+            
+            // Act
+            await session.StopAsync(); // First call
+            await session.StopAsync(); // Second call should not throw
+            await session.StopAsync(); // Third call should not throw
+            
+            // Assert - if we got here without exceptions, the test passes
+            
+            // Clean up
+            clientSocket.Close();
+        }
+
+        [TestMethod]
+        public async Task SendAsync_AfterStop_ThrowsClientException()
+        {
+            // Arrange
+            var (session, clientSocket, sessionTask) = await CreateClientSessionPairAsync();
+            
+            // Stop the session
+            await session.StopAsync();
+            
+            // Act & Assert
+            await Assert.ThrowsExceptionAsync<ClientException>(() => 
+                session.SendAsync("This should fail"));
+            
+            // Clean up
+            clientSocket.Close();
+        }
+
+        [TestMethod]
+        public async Task CancellationToken_Afterreceived_TriggersGracefulShutdown()
+        {
+            // Arrange
+            var localCts = new CancellationTokenSource();
+            var (session, clientSocket, sessionTask) = await CreateClientSessionPairAsync(localCts.Token);
+            
+            bool disconnectEventRaised = false;
+            session.Disconnected += (sender, id) =>
+            {
+                disconnectEventRaised = true;
+            };
+
+            var bytes = "Send\n"u8.ToArray();
+            var sent = await clientSocket.SendAsync(bytes);
+
+            // Send a message to verify the session is working
+            await session.SendAsync("Test message\n");
+
+            
+            // Act
+            localCts.Cancel();
+            
+            // Wait for the session to shut down
+            await Task.WhenAny(sessionTask, Task.Delay(1000));
+            
+            // Assert
+            Assert.IsTrue(disconnectEventRaised, "Disconnected event should be raised on cancellation");
+            
+            // Verify that sending after cancellation fails
+            await Assert.ThrowsExceptionAsync<ClientException>(() => 
+                session.SendAsync("This should fail"));
+            
+            // Clean up
+            clientSocket.Close();
+            localCts.Dispose();
+        }
+
+        
+        
+        [TestMethod]
+        public async Task CancellationToken_BeforeReceived_TriggersGracefulShutdown()
+        {
+            // Arrange
+            var localCts = new CancellationTokenSource();
+            var (session, clientSocket, sessionTask) = await CreateClientSessionPairAsync(localCts.Token);
+            
+            bool disconnectEventRaised = false;
+            session.Disconnected += (sender, id) =>
+            {
+                disconnectEventRaised = true;
+            };
+
+            // Send a message to verify the session is working
+            await session.SendAsync("Test message\n");
+
+            // Act
+            localCts.Cancel();
+            
+            // Wait for the session to shut down
+            await Task.WhenAny(sessionTask, Task.Delay(1000));
+            
+            // Assert
+            Assert.IsTrue(disconnectEventRaised, "Disconnected event should be raised on cancellation");
+            
+            // Verify that sending after cancellation fails
+            await Assert.ThrowsExceptionAsync<ClientException>(() => 
+                session.SendAsync("This should fail"));
+            
+            // Clean up
+            clientSocket.Close();
+            localCts.Dispose();
+        }
+
+        [TestMethod]
+        public async Task MessageTooLarge_DisconnectsClient()
+        {
+            // Arrange
+            var (session, clientSocket, sessionTask) = await CreateClientSessionPairAsync();
+            
+            bool disconnectedEventRaised = false;
+            session.Disconnected += (sender, id) => disconnectedEventRaised = true;
+            
+            // Create a message that's just below the max buffer size but doesn't have a delimiter
+            string oversizedData = new string('X', BufferSize + 1);
+            
+            // Act - send the oversized data in chunks to avoid transport layer fragmenting
+            int chunkSize = 100;
+            for (int i = 0; i < oversizedData.Length; i += chunkSize)
+            {
+                int length = Math.Min(chunkSize, oversizedData.Length - i);
+                string chunk = oversizedData.Substring(i, length);
+                byte[] data = Encoding.UTF8.GetBytes(chunk);
+                await clientSocket.SendAsync(data, SocketFlags.None);
+                
+                // Small delay to ensure data is processed
+                await Task.Delay(10);
+                
+                // If disconnected, break out of the loop
+                if (disconnectedEventRaised)
+                    break;
+            }
+            // Wait for the session to shut down
+            await Task.WhenAny(sessionTask, Task.Delay(1000));
+
+            // Wait a bit more to ensure the session has time to process
+            if (!disconnectedEventRaised)
+                await Task.Delay(1000);
+
+            // Assert
+            Assert.IsTrue(disconnectedEventRaised, 
+                "Session should disconnect when receiving a message exceeding buffer size without delimiter");
+            
+            // Clean up
+            try
+            {
+                clientSocket.Close();
+            }
+            catch { /* Ignore cleanup errors */ }
+        }
+
+        [TestMethod]
+        public async Task SocketAsyncEventArgsPool_ExhaustedPool_ThrowsException()
+        {
+            // Arrange
+            ISocketAsyncEventArgsPool smallPool = new ExceptionSocketAsyncEventArgsPool(); // Pool will thorw exception
+            var (session, clientSocket, sessionTask) = await CreateClientSessionPairAsync(token: _cts.Token, pool: smallPool);
+            
+            try
+            {
+                // Act & Assert
+                await Assert.ThrowsExceptionAsync<ClientException>(async () => 
+                {
+
+                    // This should fail because the pool throws exception
+                    await session.SendAsync("Test message");
+
+                });
+            }
+            finally
+            {
+                // Clean up
+                await session.StopAsync();
+                clientSocket.Close();
+            }
+        }
+
+        [TestMethod]
+        public async Task ProcessDelimitedMessagesAsync_ContinuesAfterEventHandlerException()
+        {
+            // Arrange
+            var (session, clientSocket, sessionTask) = await CreateClientSessionPairAsync();
+            
+            bool firstMessageReceived = false;
+            bool secondMessageReceived = false;
+            
+            // Add event handler that throws an exception on first message
+            session.MessageReceived += (sender, message) => 
+            {
+                if (!firstMessageReceived)
+                {
+                    firstMessageReceived = true;
+                    throw new Exception("Test exception from event handler");
+                }
+                else
+                {
+                    secondMessageReceived = true;
+                }
+            };
+            
+            // Act
+            // Send two messages
+            byte[] message1 = Encoding.UTF8.GetBytes("First message" + Delimiter);
+            byte[] message2 = Encoding.UTF8.GetBytes("Second message" + Delimiter);
+            
+            await clientSocket.SendAsync(message1, SocketFlags.None);
+            await Task.Delay(100); // Short delay
+            await clientSocket.SendAsync(message2, SocketFlags.None);
+            
+            // Wait for the session to shut down
+            await Task.WhenAny(sessionTask, Task.Delay(1000));
+
+            // Assert
+            Assert.IsTrue(firstMessageReceived, "First message should trigger the event handler");
+            Assert.IsFalse(secondMessageReceived, "Any error will disconnect the client and close the session");
+            
+            // Clean up
+            await session.StopAsync();
+            clientSocket.Close();
+        }
+
+        [TestMethod]
+        public async Task ExternalSocketClosure_TriggersDisconnectEvent()
+        {
+            // Arrange
+            var (session, clientSocket, sessionTask) = await CreateClientSessionPairAsync();
+            
+            bool disconnectEventRaised = false;
+            session.Disconnected += (sender, id) => disconnectEventRaised = true;
+            
+            // Act
+            // Close the socket from outside
+            clientSocket.Close();
+            
+            // Wait for the session to detect closure
+            await Task.Delay(500);
+            
+            // Assert
+            Assert.IsTrue(disconnectEventRaised, "Disconnected event should be raised when socket is closed externally");
+            
+            // No need to clean up as socket is already closed
+        }
+
+        [TestMethod]
+        public async Task ClientSocket_ResetConnection_TriggersDisconnectEvent()
+        {
+            // Arrange
+            var (session, clientSocket, sessionTask) = await CreateClientSessionPairAsync();
+            
+            bool disconnectEventRaised = false;
+            session.Disconnected += (sender, id) => disconnectEventRaised = true;
+            
+            // Act - forcibly abort the connection
+            clientSocket.LingerState = new LingerOption(true, 0);
+            clientSocket.Close();
+            
+            // Wait for the session to detect closure
+            await Task.Delay(500);
+            
+            // Assert
+            Assert.IsTrue(disconnectEventRaised, "Disconnected event should be raised when connection is reset");
+        }
+
+        // Helper method to create a client-server socket pair and client session
+        private async Task<(ClientSession session, Socket clientSocket, Task sessionTask)> 
+            CreateClientSessionPairAsync(CancellationToken token = default, ISocketAsyncEventArgsPool? pool = null)
+        {
+                        
+            // Use the provided token or default to the one from the test fixture
+            var tokenToUse = token == default ? _cts.Token : token;
+
+            // Use the provided pool or default to the one from the test fixture
+            var poolToUse = pool ?? _argsPool;
+
+            var listener = new TcpListener(IPAddress.Loopback, 0);
+            listener.Start();
+            
+            var endpoint = (IPEndPoint)listener.LocalEndpoint;
+            var clientTask = Task.Run(() => {
+                var client = new TcpClient();
+                client.Connect(endpoint);
+                return client;
+            }, tokenToUse);
+            
+            Socket serverSocket = await Task.Run(() => listener.AcceptSocket(), tokenToUse);
+            TcpClient client = await clientTask;
+            Socket clientSocket = client.Client;
+            
+            listener.Stop();
+            
+            var session = new ClientSession(Guid.NewGuid(), serverSocket, Delimiter, BufferSize, poolToUse);
+            
+            // Start the session
+            var sessionTask = session.StartAsync(tokenToUse);
+            
+            // Short delay to ensure session is ready
+            await Task.Delay(50, tokenToUse);
+            
+            return (session, clientSocket, sessionTask);
+        }
+    }
+
+    public class ExceptionSocketAsyncEventArgsPool : ISocketAsyncEventArgsPool
+    {
+        public int Count
+        {
+            get
+            {
+                throw new Exception("Count throws exception");
+            }
+        }
+
+        public new SocketAsyncEventArgs Get()
+        {
+            throw new Exception("Get throws exception");
+        }
+
+        public void Return(SocketAsyncEventArgs item)
+        {
+            throw new Exception("Return throws exception");
+        }
+    }
+}

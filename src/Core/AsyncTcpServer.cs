@@ -36,9 +36,8 @@ class AsyncTcpServer : IAsyncDisposable
                 await _maxConnectionsSemaphore.WaitAsync(cancellationToken);
 
                 var tcs = new TaskCompletionSource<Socket>(TaskCreationOptions.RunContinuationsAsynchronously);
-                var acceptArgs = new SocketAsyncEventArgs();
+                var acceptArgs = _argsPool.Get();
                 acceptArgs.UserToken = tcs;
-
                 acceptArgs.Completed += OnAcceptArgsOnCompleted;
 
                 bool isPending = _listener.AcceptAsync(acceptArgs);
@@ -46,9 +45,11 @@ class AsyncTcpServer : IAsyncDisposable
                 {
                     OnAcceptArgsOnCompleted(this, acceptArgs);
                 }
+                _argsPool.Return(acceptArgs);
 
                 // Handle new client in a separate task
                 _ = AcceptClientAsync(tcs.Task, cancellationToken);
+                
             }
         }
         catch (OperationCanceledException)

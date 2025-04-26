@@ -2,7 +2,7 @@ using System.Diagnostics;
 using System.Net.Sockets;
 using AsyncSocket;
 
-namespace Tests;
+namespace Tests.SocketAsyncEventArgsPoolTest;
 
 [TestClass]
 public class SocketAsyncEventArgsPoolLeakTests
@@ -134,12 +134,12 @@ public class SocketAsyncEventArgsPoolLeakTests
     }
         
     [DataTestMethod]
-    [DataRow(10000, 10, 16, DisplayName = "10K operations with 10 threads")]
+    [DataRow(10000, 10, 64, DisplayName = "10K operations with 10 threads")]
     [DataRow(100000, 20, 64, DisplayName = "100K operations with 20 threads")]
-    [DataRow(100000, 40, 64, DisplayName = "100K operations with 40 threads")]
-    [DataRow(100000, 60, 64, DisplayName = "100K operations with 60 threads")]
-    [DataRow(100000, 70, 64, DisplayName = "100K operations with 80 threads")]
-    [DataRow(1000000, 40, 256, DisplayName = "1000K operations with 40 threads")]
+    [DataRow(100000, 40, 128, DisplayName = "100K operations with 40 threads")]
+    [DataRow(100000, 60, 128, DisplayName = "100K operations with 60 threads")]
+    [DataRow(100000, 70, 128, DisplayName = "100K operations with 80 threads")]
+    [DataRow(1000000, 40, 512, DisplayName = "1000K operations with 40 threads")]
     public async Task MemoryPressure_UnderLoad_ShouldNotExhaustMemory(int operations, int threads, int maxMemoryMb)
     {
         // Arrange

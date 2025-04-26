@@ -1,5 +1,6 @@
 using System.Net.Sockets;
 using System.Text;
+using AsyncSocket.Properties;
 
 namespace AsyncSocket;
 
@@ -9,7 +10,7 @@ class ClientSession
     private readonly Socket _socket;
     private readonly char _delimiter;
     private readonly byte[] _receiveBuffer;
-    private readonly SocketAsyncEventArgsPool _argsPool;
+    private readonly ISocketAsyncEventArgsPool _argsPool;
     private readonly StringBuilder _stringBuffer;
     private CancellationTokenSource Cts { get; set; } = new();
     private bool _isRunning;
@@ -18,7 +19,7 @@ class ClientSession
     public event EventHandler<string> MessageReceived = delegate { };
     public event EventHandler<Guid> Disconnected = delegate { };
 
-    public ClientSession(Guid id, Socket socket, char delimiter, int bufferSize, SocketAsyncEventArgsPool argsPool)
+    public ClientSession(Guid id, Socket socket, char delimiter, int bufferSize, ISocketAsyncEventArgsPool argsPool)
     {
         Id = id;
         _socket = socket;
@@ -33,13 +34,15 @@ class ClientSession
     {
         Cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         _isRunning = true;
+        Cts.Token.Register(() => _ = StopAsync());
             
         try
         {
             await ReceiveLoopAsync(Cts.Token);
         }
-        catch (OperationCanceledException)
+        catch (OperationCanceledException e)
         {
+            Console.WriteLine($"Operation Canceled {Id}: {e.Message}");
             // Expected when cancellation is requested
         }
         catch (Exception ex)
@@ -82,9 +85,9 @@ class ClientSession
             while (_isRunning && !cancellationToken.IsCancellationRequested)
             {
                 var tcs = new TaskCompletionSource<int>(TaskCreationOptions.RunContinuationsAsynchronously);
-                    
-                args.Completed += OnReceiveCompleted;
+
                 args.UserToken = tcs;
+                args.Completed += OnReceiveCompleted;
                     
                 bool isPending = _socket.ReceiveAsync(args);
                 if (!isPending)
@@ -158,7 +161,7 @@ class ClientSession
 
     public async Task SendAsync(string message)
     {
-        if (!_isRunning) return;
+        ClientException.ThrowIf(!_isRunning, "not running");
             
         byte[] data = Encoding.UTF8.GetBytes(message);
         var args = _argsPool.Get();
@@ -167,7 +170,6 @@ class ClientSession
         try
         {
             var tcs = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
-                
             args.Completed += OnSendCompleted;
             args.UserToken = tcs;
                 

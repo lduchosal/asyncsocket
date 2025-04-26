@@ -1,7 +1,7 @@
 using System.Net.Sockets;
 using AsyncSocket;
 
-namespace Tests;
+namespace Tests.SocketAsyncEventArgsPoolTest;
 
 [TestClass]
 public class SocketAsyncEventArgsPoolTests

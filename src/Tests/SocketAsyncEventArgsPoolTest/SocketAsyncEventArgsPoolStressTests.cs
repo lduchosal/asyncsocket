@@ -2,7 +2,7 @@ using System.Diagnostics;
 using System.Net.Sockets;
 using AsyncSocket;
 
-namespace Tests;
+namespace Tests.SocketAsyncEventArgsPoolTest;
 
 [TestClass]
 public class SocketAsyncEventArgsPoolStressTests
@@ -23,7 +23,7 @@ public class SocketAsyncEventArgsPoolStressTests
     [DataRow(80, 6000)]
     [DataRow(80, 8000)]
     [DataRow(80, 10000)]
-    [DataRow(80, 100000)]
+    [DataRow(80, 100000)] // 20 seconds
     public async Task ConcurrentGetAndReturn_ShouldHandleMultipleThreads(int numThreads, int operationsPerThread)
     {
         // Arrange
