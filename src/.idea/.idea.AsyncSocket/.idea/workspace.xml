@@ -1,0 +1,614 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="da6e33fb-0b4c-4a70-816e-9b9fdf55be0f" name="Changes" comment="Feat: test units on ClientSession">
+      <change afterPath="$PROJECT_DIR$/Tests/AsyncTcpServerTest/AsyncTcpServerTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/AsyncTcpServer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/AsyncTcpServer.cs" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="DpaMonitoringSettings">
+    <option name="autoShow" value="false" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;lduchosal&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/lduchosal/asyncsocket.git&quot;,
+    &quot;accountId&quot;: &quot;e66c0b3b-a6e7-4c7a-bb90-3d54b56d5e12&quot;
+  }
+}</component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/502bb580f1844bd9a57c7182b3d3890f17198/16/fbc7f3c2/Assert.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/7963d2beb05f4e73a3774d3a0f11cd7bf82e00/21/88b4c218/Monitor.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/7963d2beb05f4e73a3774d3a0f11cd7bf82e00/3a/e96cc618/Thread.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/7963d2beb05f4e73a3774d3a0f11cd7bf82e00/3b/1f1034c4/ArrayList.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/7963d2beb05f4e73a3774d3a0f11cd7bf82e00/55/01536e6b/TaskCompletionSource`1.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/7963d2beb05f4e73a3774d3a0f11cd7bf82e00/b2/4f3023b3/AwaitTaskContinuation.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/7963d2beb05f4e73a3774d3a0f11cd7bf82e00/d4/1c2c1a0c/ThrowHelper.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/7963d2beb05f4e73a3774d3a0f11cd7bf82e00/f1/2ba9bd8f/SemaphoreSlim.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/98a84aec9933461bbc243bcc4ffde575b3200/ea/95aec064/Enumerable.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/98edaa1fde4b4a7aa11122baf29f5755a9e00/5e/f62653bb/TcpListener.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/98edaa1fde4b4a7aa11122baf29f5755a9e00/a7/6dee4e31/SocketAsyncEventArgs.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/98edaa1fde4b4a7aa11122baf29f5755a9e00/c2/0cf05c7a/Socket.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/ccdf52e13a7748cb81d6f3e165ce13824c600/de/4be353e4/ConcurrentStack`1.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/df3a5d166359f3be77c6a4c18d8b451173aecfe3a6673cbe1545fdc424a40/Assert.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/q/Projects/asyncsocket/src/Core/ClientSession.cs" root0="SKIP_HIGHLIGHTING" />
+  </component>
+  <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 7
+}</component>
+  <component name="ProjectId" id="2vrwVQCk3pVYU3MRWFOYTAMXPxq" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;d854a2dc-720d-4b1f-82a1-9ef6dad74278.executor&quot;: &quot;Debug&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;rider.external.source.directories&quot;: [
+      &quot;/Users/q/Library/Application Support/JetBrains/Rider2024.1/resharper-host/DecompilerCache&quot;,
+      &quot;/Users/q/Library/Application Support/JetBrains/Rider2024.1/resharper-host/SourcesCache&quot;,
+      &quot;/Users/q/Library/Application Support/Symbols/src&quot;
+    ]
+  }
+}</component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="da6e33fb-0b4c-4a70-816e-9b9fdf55be0f" name="Changes" comment="" />
+      <created>1744916523386</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1744916523386</updated>
+      <workItem from="1744916524429" duration="123000" />
+      <workItem from="1744916741661" duration="12990000" />
+      <workItem from="1745130779533" duration="30727000" />
+    </task>
+    <task id="LOCAL-00001" summary="Feat: SocketAsyncEventArgsPool / Tests">
+      <option name="closed" value="true" />
+      <created>1745130886097</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1745130886097</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Feat: test units on ClientSession">
+      <option name="closed" value="true" />
+      <created>1745677504164</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1745677504164</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="UnityCheckinConfiguration" checkUnsavedScenes="true" />
+  <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
+  <component name="VcsManagerConfiguration">
+    <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+    <MESSAGE value="Feat: SocketAsyncEventArgsPool / Tests" />
+    <MESSAGE value="Feat: test units on ClientSession" />
+    <option name="LAST_COMMIT_MESSAGE" value="Feat: test units on ClientSession" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Core/SocketAsyncEventArgsPool.cs</url>
+          <line>48</line>
+          <properties documentPath="$PROJECT_DIR$/Core/SocketAsyncEventArgsPool.cs" containingFunctionPresentation="Method 'Dispose'">
+            <startOffsets>
+              <option value="1137" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1152" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Tests/ClientSessionTest/ClientSessionConcurrencyTests.cs</url>
+          <line>98</line>
+          <properties documentPath="$PROJECT_DIR$/Tests/ClientSessionConcurrencyTests.cs" containingFunctionPresentation="Method 'ConcurrentReceives_ShouldTriggerMessageReceivedEvents'">
+            <startOffsets>
+              <option value="3615" />
+            </startOffsets>
+            <endOffsets>
+              <option value="3671" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="13" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Tests/ClientSessionTest/ClientSessionStressTests.cs</url>
+          <line>661</line>
+          <properties documentPath="$PROJECT_DIR$/Tests/ClientSessionStressTests.cs" containingFunctionPresentation="Method 'StressTest_MessageBoundaries'">
+            <startOffsets>
+              <option value="26982" />
+            </startOffsets>
+            <endOffsets>
+              <option value="27044" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="14" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Core/ClientSession.cs</url>
+          <line>59</line>
+          <properties documentPath="$PROJECT_DIR$/Core/ClientSession.cs" containingFunctionPresentation="Method 'StopAsync'">
+            <startOffsets>
+              <option value="1838" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1854" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="17" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Core/ClientSession.cs</url>
+          <line>122</line>
+          <properties documentPath="$PROJECT_DIR$/Core/ClientSession.cs" containingFunctionPresentation="Method 'ReceiveLoopAsync'">
+            <startOffsets>
+              <option value="4026" />
+            </startOffsets>
+            <endOffsets>
+              <option value="4063" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="18" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Core/ClientSession.cs</url>
+          <line>40</line>
+          <properties documentPath="$PROJECT_DIR$/Core/ClientSession.cs" containingFunctionPresentation="Method 'StartAsync'">
+            <startOffsets>
+              <option value="1360" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1394" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="20" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Core/ClientSession.cs</url>
+          <line>49</line>
+          <properties documentPath="$PROJECT_DIR$/Core/ClientSession.cs" containingFunctionPresentation="Method 'StartAsync'">
+            <startOffsets>
+              <option value="1648" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1705" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="21" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Core/ClientSession.cs</url>
+          <line>53</line>
+          <properties documentPath="$PROJECT_DIR$/Core/ClientSession.cs" containingFunctionPresentation="Method 'StartAsync'">
+            <startOffsets>
+              <option value="1754" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1772" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="22" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Core/ClientSession.cs</url>
+          <line>44</line>
+          <properties documentPath="$PROJECT_DIR$/Core/ClientSession.cs" containingFunctionPresentation="Method 'StartAsync'">
+            <startOffsets>
+              <option value="1472" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1531" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="23" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Core/ClientSession.cs</url>
+          <line>115</line>
+          <properties documentPath="$PROJECT_DIR$/Core/ClientSession.cs" containingFunctionPresentation="Method 'ReceiveLoopAsync'">
+            <startOffsets>
+              <option value="3850" />
+            </startOffsets>
+            <endOffsets>
+              <option value="3888" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="24" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Core/ClientSession.cs</url>
+          <line>86</line>
+          <properties documentPath="$PROJECT_DIR$/Core/ClientSession.cs" containingFunctionPresentation="Method 'ReceiveLoopAsync'">
+            <startOffsets>
+              <option value="2551" />
+            </startOffsets>
+            <endOffsets>
+              <option value="2643" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="25" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Core/ClientSession.cs</url>
+          <line>91</line>
+          <properties documentPath="$PROJECT_DIR$/Core/ClientSession.cs" containingFunctionPresentation="Method 'ReceiveLoopAsync'">
+            <startOffsets>
+              <option value="2774" />
+            </startOffsets>
+            <endOffsets>
+              <option value="2818" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="26" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Core/ClientSession.cs</url>
+          <line>94</line>
+          <properties documentPath="$PROJECT_DIR$/Core/ClientSession.cs" containingFunctionPresentation="Method 'ReceiveLoopAsync'">
+            <startOffsets>
+              <option value="2889" />
+            </startOffsets>
+            <endOffsets>
+              <option value="2923" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="27" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Core/ClientSession.cs</url>
+          <line>101</line>
+          <properties documentPath="$PROJECT_DIR$/Core/ClientSession.cs" containingFunctionPresentation="Method 'ReceiveLoopAsync'">
+            <startOffsets>
+              <option value="3137" />
+            </startOffsets>
+            <endOffsets>
+              <option value="3143" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="28" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Core/ClientSession.cs</url>
+          <line>112</line>
+          <properties documentPath="$PROJECT_DIR$/Core/ClientSession.cs" containingFunctionPresentation="Method 'ReceiveLoopAsync'">
+            <startOffsets>
+              <option value="3733" />
+            </startOffsets>
+            <endOffsets>
+              <option value="3739" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="29" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Core/ClientSession.cs</url>
+          <line>97</line>
+          <properties documentPath="$PROJECT_DIR$/Core/ClientSession.cs" containingFunctionPresentation="Method 'ReceiveLoopAsync'">
+            <startOffsets>
+              <option value="2979" />
+            </startOffsets>
+            <endOffsets>
+              <option value="3010" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="30" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Core/ClientSession.cs</url>
+          <line>104</line>
+          <properties documentPath="$PROJECT_DIR$/Core/ClientSession.cs" containingFunctionPresentation="Method 'ReceiveLoopAsync'">
+            <startOffsets>
+              <option value="3199" />
+            </startOffsets>
+            <endOffsets>
+              <option value="3275" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="31" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Tests/ClientSessionTest/ClientSessionExceptionTests.cs</url>
+          <line>154</line>
+          <properties documentPath="$PROJECT_DIR$/Tests/ClientSessionExceptionTests.cs" containingFunctionPresentation="Lambda expression inside Method 'CancellationToken_TriggersGracefulShutdown'">
+            <startOffsets>
+              <option value="5667" />
+            </startOffsets>
+            <endOffsets>
+              <option value="5696" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="32" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Core/ClientSession.cs</url>
+          <line>129</line>
+          <properties documentPath="$PROJECT_DIR$/Core/ClientSession.cs" containingFunctionPresentation="Method 'OnReceiveCompleted'">
+            <startOffsets>
+              <option value="4207" />
+            </startOffsets>
+            <endOffsets>
+              <option value="4275" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="33" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Tests/ClientSessionTest/ClientSessionExceptionTests.cs</url>
+          <line>165</line>
+          <properties documentPath="$PROJECT_DIR$/Tests/ClientSessionExceptionTests.cs" containingFunctionPresentation="Method 'CancellationToken_TriggersGracefulShutdown'">
+            <startOffsets>
+              <option value="5983" />
+            </startOffsets>
+            <endOffsets>
+              <option value="6001" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="34" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Tests/ClientSessionTest/ClientSessionExceptionTests.cs</url>
+          <line>161</line>
+          <properties documentPath="$PROJECT_DIR$/Tests/ClientSessionExceptionTests.cs" containingFunctionPresentation="Method 'CancellationToken_TriggersGracefulShutdown'">
+            <startOffsets>
+              <option value="5895" />
+            </startOffsets>
+            <endOffsets>
+              <option value="5937" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="35" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Tests/ClientSessionTest/ClientSessionExceptionTests.cs</url>
+          <line>171</line>
+          <properties documentPath="$PROJECT_DIR$/Tests/ClientSessionExceptionTests.cs" containingFunctionPresentation="Method 'CancellationToken_TriggersGracefulShutdown'">
+            <startOffsets>
+              <option value="6174" />
+            </startOffsets>
+            <endOffsets>
+              <option value="6266" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="36" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Tests/ClientSessionTest/ClientSessionExceptionTests.cs</url>
+          <line>279</line>
+          <properties documentPath="$PROJECT_DIR$/Tests/ClientSessionExceptionTests.cs" containingFunctionPresentation="Lambda expression inside Method 'SocketAsyncEventArgsPool_ExhaustedPool_ThrowsException'">
+            <startOffsets>
+              <option value="10432" />
+            </startOffsets>
+            <endOffsets>
+              <option value="10472" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="37" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Tests/ClientSessionTest/ClientSessionExceptionTests.cs</url>
+          <line>269</line>
+          <properties documentPath="$PROJECT_DIR$/Tests/ClientSessionExceptionTests.cs" containingFunctionPresentation="Method 'SocketAsyncEventArgsPool_ExhaustedPool_ThrowsException'">
+            <startOffsets>
+              <option value="9929" />
+            </startOffsets>
+            <endOffsets>
+              <option value="10007" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="39" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Core/ClientSession.cs</url>
+          <line>34</line>
+          <properties documentPath="$PROJECT_DIR$/Core/ClientSession.cs" containingFunctionPresentation="Method 'StartAsync'">
+            <startOffsets>
+              <option value="1161" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1234" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="40" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Tests/ClientSessionTest/ClientSessionExceptionTests.cs</url>
+          <line>303</line>
+          <properties documentPath="$PROJECT_DIR$/Tests/ClientSessionExceptionTests.cs" containingFunctionPresentation="Lambda expression inside Method 'ProcessDelimitedMessagesAsync_ContinuesAfterEventHandlerException'">
+            <startOffsets>
+              <option value="11204" />
+            </startOffsets>
+            <endOffsets>
+              <option value="11230" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="42" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Core/AsyncTcpServer.cs</url>
+          <line>68</line>
+          <properties documentPath="$PROJECT_DIR$/Core/AsyncTcpServer.cs" containingFunctionPresentation="Method 'OnAcceptArgsOnCompleted'">
+            <startOffsets>
+              <option value="2314" />
+            </startOffsets>
+            <endOffsets>
+              <option value="2382" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="44" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Core/AsyncTcpServer.cs</url>
+          <line>120</line>
+          <properties documentPath="$PROJECT_DIR$/Core/AsyncTcpServer.cs" containingFunctionPresentation="Method 'HandleConnectedAsync'">
+            <startOffsets>
+              <option value="4015" />
+            </startOffsets>
+            <endOffsets>
+              <option value="4066" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="51" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Core/AsyncTcpServer.cs</url>
+          <line>125</line>
+          <properties documentPath="$PROJECT_DIR$/Core/AsyncTcpServer.cs" containingFunctionPresentation="Method 'HandleDisconnectedAsync'">
+            <startOffsets>
+              <option value="4185" />
+            </startOffsets>
+            <endOffsets>
+              <option value="4239" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="52" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Core/AsyncTcpServer.cs</url>
+          <line>131</line>
+          <properties documentPath="$PROJECT_DIR$/Core/AsyncTcpServer.cs" containingFunctionPresentation="Method 'HandleMessageAsync'">
+            <startOffsets>
+              <option value="4380" />
+            </startOffsets>
+            <endOffsets>
+              <option value="4439" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="53" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Core/AsyncTcpServer.cs</url>
+          <line>140</line>
+          <properties documentPath="$PROJECT_DIR$/Core/AsyncTcpServer.cs" containingFunctionPresentation="Method 'DisposeAsync'">
+            <startOffsets>
+              <option value="4667" />
+            </startOffsets>
+            <endOffsets>
+              <option value="4685" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="54" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Core/AsyncTcpServer.cs</url>
+          <line>96</line>
+          <properties documentPath="$PROJECT_DIR$/Core/AsyncTcpServer.cs" containingFunctionPresentation="Lambda expression inside Method 'AcceptClientAsync'">
+            <startOffsets>
+              <option value="3249" />
+            </startOffsets>
+            <endOffsets>
+              <option value="3291" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="55" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Core/AsyncTcpServer.cs</url>
+          <line>101</line>
+          <properties documentPath="$PROJECT_DIR$/Core/AsyncTcpServer.cs" containingFunctionPresentation="Lambda expression inside Method 'AcceptClientAsync'">
+            <startOffsets>
+              <option value="3411" />
+            </startOffsets>
+            <endOffsets>
+              <option value="3449" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="56" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Core/AsyncTcpServer.cs</url>
+          <line>109</line>
+          <properties documentPath="$PROJECT_DIR$/Core/AsyncTcpServer.cs" containingFunctionPresentation="Method 'AcceptClientAsync'">
+            <startOffsets>
+              <option value="3711" />
+            </startOffsets>
+            <endOffsets>
+              <option value="3754" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="57" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Core/AsyncTcpServer.cs</url>
+          <line>88</line>
+          <properties documentPath="$PROJECT_DIR$/Core/AsyncTcpServer.cs" containingFunctionPresentation="Method 'AcceptClientAsync'">
+            <startOffsets>
+              <option value="2934" />
+            </startOffsets>
+            <endOffsets>
+              <option value="2964" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="60" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Core/AsyncTcpServer.cs</url>
+          <line>51</line>
+          <properties documentPath="$PROJECT_DIR$/Core/AsyncTcpServer.cs" containingFunctionPresentation="Method 'RunAsync'">
+            <startOffsets>
+              <option value="1885" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1936" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="62" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Core/AsyncTcpServer.cs</url>
+          <line>87</line>
+          <properties documentPath="$PROJECT_DIR$/Core/AsyncTcpServer.cs" containingFunctionPresentation="Method 'AcceptClientAsync'">
+            <startOffsets>
+              <option value="2885" />
+            </startOffsets>
+            <endOffsets>
+              <option value="2921" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="64" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+    <pin-to-top-manager>
+      <pinned-members>
+        <PinnedItemInfo parentTag="Type#System.Text.StringBuilder" memberName="Length" />
+      </pinned-members>
+    </pin-to-top-manager>
+  </component>
+</project>

@@ -11,21 +11,23 @@ class AsyncTcpServer : IAsyncDisposable
     private readonly ConcurrentDictionary<Guid, ClientSession> _clients = new();
     private readonly SemaphoreSlim _maxConnectionsSemaphore;
     private readonly SocketAsyncEventArgsPool _argsPool = new();
+    private readonly int _maxConnection;
+    
     
     private const int BufferSize = 4096;
-    private const int MaxConnections = 100;
     
-    public AsyncTcpServer(string ipAddress, int port)
+    public AsyncTcpServer(string ipAddress, int port, int maxConnections = 1)
     {
+        _maxConnection = maxConnections;
         _endpoint = new IPEndPoint(IPAddress.Parse(ipAddress), port);
-        _maxConnectionsSemaphore = new SemaphoreSlim(MaxConnections, MaxConnections);
+        _maxConnectionsSemaphore = new SemaphoreSlim(_maxConnection, _maxConnection);
         _listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
     }
 
     public async Task RunAsync(CancellationToken cancellationToken)
     {
         _listener.Bind(_endpoint);
-        _listener.Listen(100);
+        _listener.Listen(backlog: _maxConnection);
 
         Console.WriteLine($"Server started. Listening on {_endpoint}");
 
@@ -36,7 +38,7 @@ class AsyncTcpServer : IAsyncDisposable
                 await _maxConnectionsSemaphore.WaitAsync(cancellationToken);
 
                 var tcs = new TaskCompletionSource<Socket>(TaskCreationOptions.RunContinuationsAsynchronously);
-                var acceptArgs = _argsPool.Get();
+                var acceptArgs = new SocketAsyncEventArgs();
                 acceptArgs.UserToken = tcs;
                 acceptArgs.Completed += OnAcceptArgsOnCompleted;
 
@@ -45,7 +47,6 @@ class AsyncTcpServer : IAsyncDisposable
                 {
                     OnAcceptArgsOnCompleted(this, acceptArgs);
                 }
-                _argsPool.Return(acceptArgs);
 
                 // Handle new client in a separate task
                 _ = AcceptClientAsync(tcs.Task, cancellationToken);
@@ -59,7 +60,7 @@ class AsyncTcpServer : IAsyncDisposable
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error in server: {ex.Message}");
+            Console.WriteLine($"Error in server: {ex}");
         }
     }
     
