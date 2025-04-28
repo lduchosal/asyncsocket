@@ -13,7 +13,6 @@ class AsyncTcpServer : IAsyncDisposable
     private readonly SocketAsyncEventArgsPool _argsPool = new();
     private readonly int _maxConnection;
     
-    
     private const int BufferSize = 4096;
     
     public AsyncTcpServer(string ipAddress, int port, int maxConnections = 1)
@@ -138,6 +137,7 @@ class AsyncTcpServer : IAsyncDisposable
 
     public async ValueTask DisposeAsync()
     {
+        Console.WriteLine($"DisposeAsync");
         _listener.Close();
 
         var clientTasks = new List<Task>();

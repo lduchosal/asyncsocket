@@ -11,7 +11,7 @@ public class SocketAsyncEventArgsPoolStressTests
     [DataRow(20, 1000)]
     [DataRow(20, 10000)]
     [DataRow(20, 100000)]
-    [DataRow(20, 1000000)]
+    //[DataRow(20, 1000000)] // 12 seconds
     [DataRow(40, 2000)]
     [DataRow(40, 4000)]
     [DataRow(40, 6000)]
@@ -22,8 +22,8 @@ public class SocketAsyncEventArgsPoolStressTests
     [DataRow(80, 4000)]
     [DataRow(80, 6000)]
     [DataRow(80, 8000)]
-    [DataRow(80, 10000)]
-    [DataRow(80, 100000)] // 20 seconds
+    //[DataRow(80, 10000)] // 14 seconds
+    //[DataRow(80, 100000)] // 20 seconds
     public async Task ConcurrentGetAndReturn_ShouldHandleMultipleThreads(int numThreads, int operationsPerThread)
     {
         // Arrange

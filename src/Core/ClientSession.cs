@@ -13,7 +13,13 @@ class ClientSession
     private readonly ISocketAsyncEventArgsPool _argsPool;
     private readonly StringBuilder _stringBuffer;
     private CancellationTokenSource Cts { get; set; } = new();
-    private bool _isRunning;
+
+    private bool _isRunning
+    {
+        get;
+        set;
+    }
+
     private readonly int _maxBufferSizeWithoutDelimiter;
 
     public event EventHandler<string> MessageReceived = delegate { };
@@ -32,10 +38,12 @@ class ClientSession
 
     public async Task StartAsync(CancellationToken cancellationToken)
     {
-        Cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         _isRunning = true;
+        Console.WriteLine($"Client StartAsync {Id}: {_isRunning}");
+        
+        Cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         Cts.Token.Register(() => _ = StopAsync());
-            
+
         try
         {
             await ReceiveLoopAsync(Cts.Token);
@@ -57,18 +65,26 @@ class ClientSession
 
     public async Task StopAsync()
     {
-        if (!_isRunning) return;
+        if (!_isRunning)
+        {
+            Console.WriteLine($"StopAsync non running client {Id}: {_isRunning}");
+            return;
+        }
             
         _isRunning = false;
         await Cts.CancelAsync();
-            
+
         try
         {
+            await _socket.DisconnectAsync(true);
             _socket.Shutdown(SocketShutdown.Both);
         }
-        catch { /* Ignore shutdown errors */ }
-            
+        catch (Exception e)
+        {
+            Console.WriteLine($"DisconnectAsync and shutdown {e}");
+        }
         _socket.Close();
+        _socket.Dispose();
             
         Disconnected.Invoke(this, Id);
             
