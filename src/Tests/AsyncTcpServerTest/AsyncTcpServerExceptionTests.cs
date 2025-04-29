@@ -14,7 +14,8 @@ public class AsyncTcpServerExceptionTests
     public async Task RunAsync_CancellationRequested_ThrowsOperationCanceledException()
     {
         // Arrange
-        var server = new AsyncTcpServer("127.0.0.1", 8080);
+        var config = new AsyncServerConfig { IpAddress = "127.0.0.1", Port = 8080 };
+        var server = new AsyncTcpServer(config);
         using var cts = new CancellationTokenSource();
 
         // Act & Assert
@@ -36,7 +37,8 @@ public class AsyncTcpServerExceptionTests
             () =>
             {
                 // Arrange
-                return new AsyncTcpServer("invalid_ip", 8080);
+                var config = new AsyncServerConfig { IpAddress = "invalid_ip", Port = 8080 };
+                var server = new AsyncTcpServer(config);
             });
     }
 
@@ -45,7 +47,8 @@ public class AsyncTcpServerExceptionTests
     {
         // Arrange
         // First server to occupy the port
-        var server1 = new AsyncTcpServer("127.0.0.1", 8081);
+        var config = new AsyncServerConfig { IpAddress = "127.0.0.1", Port = 8081 };
+        var server1 = new AsyncTcpServer(config);
         using var cts1 = new CancellationTokenSource();
         var task1 = server1.RunAsync(cts1.Token);
 
@@ -53,7 +56,7 @@ public class AsyncTcpServerExceptionTests
         await Task.Delay(100);
 
         // Second server trying to use the same port
-        var server2 = new AsyncTcpServer("127.0.0.1", 8081);
+        var server2 = new AsyncTcpServer(config);
         using var cts2 = new CancellationTokenSource();
 
         // Act & Assert
@@ -78,7 +81,8 @@ public class AsyncTcpServerExceptionTests
     public async Task RunAsync_MaximumConnectionsExceeded_ClientsWaitForAvailableSlot()
     {
         // Arrange
-        await using var server = new AsyncTcpServer("127.0.0.1", 8082, maxConnections: 1);
+        var config = new AsyncServerConfig { IpAddress = "127.0.0.1", Port = 8081, MaxConnections = 1};
+        await using var server = new AsyncTcpServer(config);
         using var cts = new CancellationTokenSource(5000);
         var serverTask = server.RunAsync(cts.Token);
 

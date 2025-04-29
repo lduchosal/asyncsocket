@@ -9,12 +9,8 @@ builder.ConfigureServices((context, services) =>
 {
     services
         .AddScoped<LoggerFactory>()
-        .AddScoped<AsyncTcpServer>(serviceProvider =>
-        {
-            var logger = serviceProvider.GetRequiredService<ILogger<AsyncTcpServer>>();
-            var loggerFactory = serviceProvider.GetRequiredService<LoggerFactory>();
-            return new AsyncTcpServer(logger, loggerFactory,"127.0.0.1", 7777);
-        })
+        .AddScoped<AsyncTcpServer>()
+        .AddScoped<AsyncServerConfig>(_ => new AsyncServerConfig { IpAddress = "127.0.0.1", Port = 7777 })
         .AddHostedService<EchoService>();
 });
 

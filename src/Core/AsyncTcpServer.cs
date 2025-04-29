@@ -15,22 +15,17 @@ public class AsyncTcpServer : IAsyncDisposable
     private readonly SemaphoreSlim _maxConnectionsSemaphore;
     private readonly SocketAsyncEventArgsPool _argsPool = new();
     private readonly int _maxConnection;
+    private readonly int _bufferSize;
     
-    private const int BufferSize = 4096;
-    
-    public AsyncTcpServer(ILogger<AsyncTcpServer>? logger, ILoggerFactory? loggerFactory, string ipAddress, int port, int maxConnections = 1)
+    public AsyncTcpServer(AsyncServerConfig config, ILogger<AsyncTcpServer>? logger = null, ILoggerFactory? loggerFactory = null)
     {
-        _maxConnection = maxConnections;
-        _endpoint = new IPEndPoint(IPAddress.Parse(ipAddress), port);
+        _maxConnection = config.MaxConnections;
+        _bufferSize = config.BufferSize;
+        _endpoint = new IPEndPoint(IPAddress.Parse(config.IpAddress), config.Port);
         _maxConnectionsSemaphore = new SemaphoreSlim(_maxConnection, _maxConnection);
         _listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         _logger = logger;
         _loggerFactory = loggerFactory;
-    }
-
-    public AsyncTcpServer(string ipAddress, int port, int maxConnections = 1)
-        : this(null, null, ipAddress, port, maxConnections)
-    {
     }
 
     public async Task RunAsync(CancellationToken cancellationToken)
@@ -98,7 +93,7 @@ public class AsyncTcpServer : IAsyncDisposable
         {
             var clientSocket = await acceptTask;
             var clientId = Guid.NewGuid();
-            var client = new ClientSession(_loggerFactory?.CreateLogger<ClientSession>(),clientId, clientSocket, '\n', BufferSize, _argsPool);
+            var client = new ClientSession(_loggerFactory?.CreateLogger<ClientSession>(),clientId, clientSocket, '\n', _bufferSize, _argsPool);
 
             await HandleConnectedAsync(client);
 

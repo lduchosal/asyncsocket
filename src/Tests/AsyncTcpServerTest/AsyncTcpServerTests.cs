@@ -10,14 +10,14 @@ public class AsyncTcpServerTests
     private const string ServerIp = "127.0.0.1";
     private const int ServerPort = 8888;
 
-    
     [TestMethod]
     public async Task ServerStart_WithInvalidIPAddress_ThrowsException()
     {
         // Arrange & Act & Assert
         await Assert.ThrowsExceptionAsync<FormatException>(async () =>
         {
-            await using var server = new AsyncTcpServer("invalid-ip", ServerPort);
+            var config = new AsyncServerConfig { IpAddress = "invalid-ip", Port = ServerPort };
+            await using var server = new AsyncTcpServer(config);
             var tokenSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(100));
             await server.RunAsync(tokenSource.Token);
         });
@@ -27,7 +27,8 @@ public class AsyncTcpServerTests
     public async Task Server_StartsAndStops_Successfully()
     {
         // Arrange
-        await using var server = new AsyncTcpServer(ServerIp, ServerPort);
+        var config = new AsyncServerConfig { IpAddress = ServerIp, Port = ServerPort };
+        await using var server = new AsyncTcpServer(config);
         var cts = new CancellationTokenSource(TimeSpan.FromSeconds(1));
 
         // Act & Assert
@@ -47,7 +48,8 @@ public class AsyncTcpServerTests
     public async Task Server_AcceptsClient_Successfully()
     {
         // Arrange
-        await using var server = new AsyncTcpServer(ServerIp, ServerPort);
+        var config = new AsyncServerConfig { IpAddress = ServerIp, Port = ServerPort };
+        await using var server = new AsyncTcpServer(config);
         var cts = new CancellationTokenSource();
 
         // Start server
@@ -75,7 +77,8 @@ public class AsyncTcpServerTests
     public async Task Server_EchoesMessage_Successfully()
     {
         // Arrange
-        await using var server = new AsyncTcpServer(ServerIp, ServerPort);
+        var config = new AsyncServerConfig { IpAddress = ServerIp, Port = ServerPort };
+        await using var server = new AsyncTcpServer(config);
         var cts = new CancellationTokenSource();
         var serverTask = server.RunAsync(cts.Token);
         await Task.Delay(1000); // Allow server to initialize
@@ -108,7 +111,8 @@ public class AsyncTcpServerTests
     {
         // Arrange
         const int clientCount = 5;
-        await using var server = new AsyncTcpServer(ServerIp, ServerPort, maxConnections:10);
+        var config = new AsyncServerConfig { IpAddress = ServerIp, Port = ServerPort, MaxConnections = 10};
+        await using var server = new AsyncTcpServer(config);
         var cts = new CancellationTokenSource(5000);
         var serverTask = server.RunAsync(cts.Token);
         await Task.Delay(200, cts.Token); // Allow server to initialize
@@ -147,7 +151,8 @@ public class AsyncTcpServerTests
     public async Task Server_InitializesWithDifferentPorts_Successfully(string ip, int port)
     {
         // Arrange
-        await using var server = new AsyncTcpServer(ip, port);
+        var config = new AsyncServerConfig { IpAddress = ip, Port = port };
+        await using var server = new AsyncTcpServer(config);
         var cts = new CancellationTokenSource();
 
         // Act
@@ -175,7 +180,8 @@ public class AsyncTcpServerTests
     public async Task Server_HandlesVariousMessages_Successfully(string message)
     {
         // Arrange
-        await using var server = new AsyncTcpServer(ServerIp, ServerPort);
+        var config = new AsyncServerConfig { IpAddress = ServerIp, Port = ServerPort };
+        await using var server = new AsyncTcpServer(config);
         var cts = new CancellationTokenSource();
         var serverTask = server.RunAsync(cts.Token);
         await Task.Delay(100); // Allow server to initialize
@@ -214,7 +220,8 @@ public class AsyncTcpServerTests
 
         // Arrange - in real implementation you'd use a mock or derived test class with lower MaxConnections
         const int testMaxConnections = 10; // Assuming MaxConnections was set to 10 for testing
-        await using var server = new AsyncTcpServer(ServerIp, ServerPort, maxConnections: 2);
+        var config = new AsyncServerConfig { IpAddress = ServerIp, Port = ServerPort, MaxConnections = 2};
+        await using var server = new AsyncTcpServer(config);
         var cts = new CancellationTokenSource(millisecondsDelay: 5000);
         var serverTask = server.RunAsync(cts.Token);
         await Task.Delay(1000, cts.Token); // Allow server to initialize

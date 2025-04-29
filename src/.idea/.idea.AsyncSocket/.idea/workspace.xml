@@ -7,15 +7,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="da6e33fb-0b4c-4a70-816e-9b9fdf55be0f" name="Changes" comment="Feat: AsyncTcpServer / Exceptions">
-      <change afterPath="$PROJECT_DIR$/EchoServer/EchoServer.csproj" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/EchoServer/EchoService.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/EchoServer/Program.cs" afterDir="false" />
+    <list default="true" id="da6e33fb-0b4c-4a70-816e-9b9fdf55be0f" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.AsyncSocket/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.AsyncSocket/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AsyncSocket.sln" beforeDir="false" afterPath="$PROJECT_DIR$/AsyncSocket.sln" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/AsyncTcpServer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/AsyncTcpServer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/ClientSession.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/ClientSession.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/Core.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Core.csproj" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -129,7 +122,7 @@
       <workItem from="1744916524429" duration="123000" />
       <workItem from="1744916741661" duration="12990000" />
       <workItem from="1745130779533" duration="37758000" />
-      <workItem from="1745755921763" duration="16076000" />
+      <workItem from="1745755921763" duration="17719000" />
     </task>
     <task id="LOCAL-00001" summary="Feat: SocketAsyncEventArgsPool / Tests">
       <option name="closed" value="true" />
@@ -163,7 +156,15 @@
       <option name="project" value="LOCAL" />
       <updated>1745818474487</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Feat: EchoServer">
+      <option name="closed" value="true" />
+      <created>1745908010514</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1745908010514</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -178,7 +179,8 @@
     <MESSAGE value="Feat: test units on ClientSession" />
     <MESSAGE value="Feat: AsyncTcpServer Tests" />
     <MESSAGE value="Feat: AsyncTcpServer / Exceptions" />
-    <option name="LAST_COMMIT_MESSAGE" value="Feat: AsyncTcpServer / Exceptions" />
+    <MESSAGE value="Feat: EchoServer" />
+    <option name="LAST_COMMIT_MESSAGE" value="Feat: EchoServer" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
