@@ -81,7 +81,7 @@ public class AsyncTcpServerExceptionTests
     public async Task RunAsync_MaximumConnectionsExceeded_ClientsWaitForAvailableSlot()
     {
         // Arrange
-        var config = new AsyncServerConfig { IpAddress = "127.0.0.1", Port = 8081, MaxConnections = 1};
+        var config = new AsyncServerConfig { IpAddress = "127.0.0.1", Port = 8082, MaxConnections = 1};
         await using var server = new AsyncTcpServer(config);
         using var cts = new CancellationTokenSource(5000);
         var serverTask = server.RunAsync(cts.Token);

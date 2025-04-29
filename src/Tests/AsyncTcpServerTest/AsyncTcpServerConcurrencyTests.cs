@@ -190,9 +190,9 @@ public class AsyncTcpServerConcurrencyTests
         // Act & Assert
         await Assert.ThrowsExceptionAsync<ArgumentOutOfRangeException>(async () =>
         {
-            var config = new AsyncServerConfig { IpAddress = ServerIp, Port = _port };
+            var config = new AsyncServerConfig { IpAddress = ServerIp, Port = invalidPort };
             await using AsyncTcpServer server = new (config);
-            using var tokenSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(100));
+            using var tokenSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(1000));
             await server.RunAsync(tokenSource.Token);
         });
     }
