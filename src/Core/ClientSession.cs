@@ -1,12 +1,14 @@
 using System.Net.Sockets;
 using System.Text;
 using AsyncSocket.Properties;
+using Microsoft.Extensions.Logging;
 
 namespace AsyncSocket;
 
 class ClientSession
 {
     public Guid Id { get; }
+    private readonly ILogger<ClientSession>? _logger;
     private readonly Socket _socket;
     private readonly char _delimiter;
     private readonly byte[] _receiveBuffer;
@@ -14,11 +16,7 @@ class ClientSession
     private readonly StringBuilder _stringBuffer;
     private CancellationTokenSource Cts { get; set; } = new();
 
-    private bool _isRunning
-    {
-        get;
-        set;
-    }
+    private bool IsRunning { get; set; }
 
     private readonly int _maxBufferSizeWithoutDelimiter;
 
@@ -26,6 +24,12 @@ class ClientSession
     public event EventHandler<Guid> Disconnected = delegate { };
 
     public ClientSession(Guid id, Socket socket, char delimiter, int bufferSize, ISocketAsyncEventArgsPool argsPool)
+    :this(null, id, socket, delimiter,bufferSize,argsPool)
+    {
+        
+    }
+
+    public ClientSession(ILogger<ClientSession>? logger, Guid id, Socket socket, char delimiter, int bufferSize, ISocketAsyncEventArgsPool argsPool)
     {
         Id = id;
         _socket = socket;
@@ -34,12 +38,13 @@ class ClientSession
         _argsPool = argsPool;
         _maxBufferSizeWithoutDelimiter = bufferSize; // Max size allowed without finding a delimiter
         _stringBuffer = new();
+        _logger = logger;
     }
 
     public async Task StartAsync(CancellationToken cancellationToken)
     {
-        _isRunning = true;
-        Console.WriteLine($"Client StartAsync {Id}: {_isRunning}");
+        IsRunning = true;
+        _logger?.LogDebug("Client StartAsync {Id}: {isRunning}", Id, IsRunning);
         
         Cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         Cts.Token.Register(() => _ = StopAsync());
@@ -50,12 +55,12 @@ class ClientSession
         }
         catch (OperationCanceledException e)
         {
-            Console.WriteLine($"Operation Canceled {Id}: {e.Message}");
+            _logger?.LogDebug("Operation Canceled {Id}: {exception}", Id, e);
             // Expected when cancellation is requested
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error in client {Id}: {ex.Message}");
+            _logger?.LogDebug("Error in client {Id}: {exception}", Id, ex);
         }
         finally
         {
@@ -65,13 +70,13 @@ class ClientSession
 
     public async Task StopAsync()
     {
-        if (!_isRunning)
+        if (!IsRunning)
         {
-            Console.WriteLine($"StopAsync non running client {Id}: {_isRunning}");
+            _logger?.LogDebug("StopAsync non running client {Id}: {isRunning}", Id, IsRunning);
             return;
         }
             
-        _isRunning = false;
+        IsRunning = false;
         await Cts.CancelAsync();
 
         try
@@ -81,7 +86,7 @@ class ClientSession
         }
         catch (Exception e)
         {
-            Console.WriteLine($"DisconnectAsync and shutdown {e}");
+            _logger?.LogDebug("DisconnectAsync and shutdown {e}", e);
         }
         _socket.Close();
         _socket.Dispose();
@@ -98,7 +103,7 @@ class ClientSession
             
         try
         {
-            while (_isRunning && !cancellationToken.IsCancellationRequested)
+            while (IsRunning && !cancellationToken.IsCancellationRequested)
             {
                 var tcs = new TaskCompletionSource<int>(TaskCreationOptions.RunContinuationsAsynchronously);
 
@@ -125,7 +130,7 @@ class ClientSession
                 if (_stringBuffer.Length > _maxBufferSizeWithoutDelimiter && 
                     _stringBuffer.ToString().IndexOf(_delimiter) == -1)
                 {
-                    Console.WriteLine($"Client {Id}: Buffer exceeded maximum size without delimiter. Disconnecting.");
+                    _logger?.LogDebug("Client {Id}: Buffer exceeded maximum size without delimiter. Disconnecting.", Id);
                     break;  // This will trigger StopAsync() in the finally block
                 }
                     
@@ -177,7 +182,7 @@ class ClientSession
 
     public async Task SendAsync(string message)
     {
-        ClientException.ThrowIf(!_isRunning, "not running");
+        ClientException.ThrowIf(!IsRunning, "not running");
             
         byte[] data = Encoding.UTF8.GetBytes(message);
         var args = _argsPool.Get();

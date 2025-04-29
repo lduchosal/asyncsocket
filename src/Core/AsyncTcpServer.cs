@@ -1,11 +1,14 @@
 using System.Collections.Concurrent;
 using System.Net;
 using System.Net.Sockets;
+using Microsoft.Extensions.Logging;
 
 namespace AsyncSocket;
 
-class AsyncTcpServer : IAsyncDisposable
+public class AsyncTcpServer : IAsyncDisposable
 {
+    private readonly ILogger<AsyncTcpServer>? _logger;
+    private readonly ILoggerFactory? _loggerFactory;
     private readonly IPEndPoint _endpoint;
     private readonly Socket _listener;
     private readonly ConcurrentDictionary<Guid, ClientSession> _clients = new();
@@ -15,20 +18,29 @@ class AsyncTcpServer : IAsyncDisposable
     
     private const int BufferSize = 4096;
     
-    public AsyncTcpServer(string ipAddress, int port, int maxConnections = 1)
+    public AsyncTcpServer(ILogger<AsyncTcpServer>? logger, ILoggerFactory? loggerFactory, string ipAddress, int port, int maxConnections = 1)
     {
         _maxConnection = maxConnections;
         _endpoint = new IPEndPoint(IPAddress.Parse(ipAddress), port);
         _maxConnectionsSemaphore = new SemaphoreSlim(_maxConnection, _maxConnection);
         _listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+        _logger = logger;
+        _loggerFactory = loggerFactory;
+    }
+
+    public AsyncTcpServer(string ipAddress, int port, int maxConnections = 1)
+        : this(null, null, ipAddress, port, maxConnections)
+    {
     }
 
     public async Task RunAsync(CancellationToken cancellationToken)
     {
+        
         _listener.Bind(_endpoint);
         _listener.Listen(backlog: _maxConnection);
 
-        Console.WriteLine($"Server started. Listening on {_endpoint}");
+        _logger?.LogDebug("Server started. Listening on {endpoint}", _endpoint);
+        _logger?.LogDebug("Max connections {maxConnection}", _maxConnection);
 
         try
         {
@@ -59,7 +71,7 @@ class AsyncTcpServer : IAsyncDisposable
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error in server: {ex}");
+            _logger?.LogDebug("Error in server: {ex}", ex);
         }
     }
     
@@ -86,7 +98,7 @@ class AsyncTcpServer : IAsyncDisposable
         {
             var clientSocket = await acceptTask;
             var clientId = Guid.NewGuid();
-            var client = new ClientSession(clientId, clientSocket, '\n', BufferSize, _argsPool);
+            var client = new ClientSession(_loggerFactory?.CreateLogger<ClientSession>(),clientId, clientSocket, '\n', BufferSize, _argsPool);
 
             await HandleConnectedAsync(client);
 
@@ -104,31 +116,31 @@ class AsyncTcpServer : IAsyncDisposable
                 _maxConnectionsSemaphore.Release();
             };
                 
-            Console.WriteLine($"Client connected: {clientSocket.RemoteEndPoint} (ID: {clientId})");
+            _logger?.LogDebug("Client connected: {remoteEndPoint} (ID: {clientId})", clientSocket.RemoteEndPoint, clientId);
                 
             await client.StartAsync(cancellationToken);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error accepting client: {ex.Message}");
+            _logger?.LogDebug("Error accepting client: {ex}", ex);
             _maxConnectionsSemaphore.Release();
         }
     }
 
     private Task HandleConnectedAsync(ClientSession client)
     {
-        Console.WriteLine($"Client Connected {client.Id}");
+        _logger?.LogDebug("Client Connected {clientId}", client.Id);
         return Task.CompletedTask;
     }
     private Task HandleDisconnectedAsync(ClientSession client)
     {
-        Console.WriteLine($"Client Disconnected {client.Id}");
+        _logger?.LogDebug("Client Disconnected {clientId}", client.Id);
         return Task.CompletedTask;
     }
     
     private async Task HandleMessageAsync(ClientSession client, string message)
     {
-        Console.WriteLine($"Received from {client.Id}: {message}");
+        _logger?.LogDebug($"Received from {client.Id}: {message}");
             
         // Echo the message back with the delimiter
         string response = $"Server received: {message}";
@@ -137,7 +149,7 @@ class AsyncTcpServer : IAsyncDisposable
 
     public async ValueTask DisposeAsync()
     {
-        Console.WriteLine($"DisposeAsync");
+        _logger?.LogDebug($"DisposeAsync");
         _listener.Close();
 
         var clientTasks = new List<Task>();
@@ -151,6 +163,6 @@ class AsyncTcpServer : IAsyncDisposable
         _maxConnectionsSemaphore.Dispose();
         _argsPool.Dispose();
 
-        Console.WriteLine("Server stopped.");
+        _logger?.LogDebug("Server stopped.");
     }
 }

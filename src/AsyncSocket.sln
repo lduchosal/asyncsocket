@@ -4,6 +4,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{D2661DBC-D242-4BAC-9221-AE288B7CE65E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EchoServer", "EchoServer\EchoServer.csproj", "{00B1EEB6-C268-4AF2-BC86-30A935BFEE4D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{9324AD30-4A62-4252-9756-115B7B660F6E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +22,12 @@ Global
 		{D2661DBC-D242-4BAC-9221-AE288B7CE65E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D2661DBC-D242-4BAC-9221-AE288B7CE65E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D2661DBC-D242-4BAC-9221-AE288B7CE65E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{00B1EEB6-C268-4AF2-BC86-30A935BFEE4D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{00B1EEB6-C268-4AF2-BC86-30A935BFEE4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{00B1EEB6-C268-4AF2-BC86-30A935BFEE4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{00B1EEB6-C268-4AF2-BC86-30A935BFEE4D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{00B1EEB6-C268-4AF2-BC86-30A935BFEE4D} = {9324AD30-4A62-4252-9756-115B7B660F6E}
 	EndGlobalSection
 EndGlobal
