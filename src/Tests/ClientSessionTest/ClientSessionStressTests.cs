@@ -38,7 +38,7 @@ public class ClientSessionStressTests
         const int iterations = 1000;
         const int maxConcurrentConnections = 50;
         var semaphore = new SemaphoreSlim(maxConcurrentConnections);
-        var activeSessions = new ConcurrentBag<(ClientSession session, Socket clientSocket, Task sessionTask)>();
+        var activeSessions = new ConcurrentBag<(ClientSession<string> session, Socket clientSocket, Task sessionTask)>();
         int successfulConnections = 0;
         int failedConnections = 0;
             
@@ -257,7 +257,7 @@ public class ClientSessionStressTests
         const int messagesPerSession = 50;
         const int messageSize = 4096; // 4KB
             
-        var activeConnections = new ConcurrentBag<(ClientSession session, Socket clientSocket, Task sessionTask)>();
+        var activeConnections = new ConcurrentBag<(ClientSession<string> session, Socket clientSocket, Task sessionTask)>();
         int sessionsCreated = 0;
         int sessionsErrored = 0;
             
@@ -516,7 +516,7 @@ public class ClientSessionStressTests
     }
         
     // Helper method to create a client-server socket pair and client session
-    private async Task<(ClientSession session, Socket clientSocket, Task sessionTask)> 
+    private async Task<(ClientSession<string> session, Socket clientSocket, Task sessionTask)> 
         CreateClientSessionPairAsync()
     {
         var listener = new TcpListener(IPAddress.Loopback, 0);
@@ -539,7 +539,7 @@ public class ClientSessionStressTests
         listener.Stop();
         
         var framing = new CharDelimiterFraming(null, Delimiter, MaxSiteWithoutADelimiter);
-        var session = new ClientSession(null, Guid.NewGuid(), serverSocket, framing, BufferSize, _argsPool);
+        var session = new ClientSession<string>(null, Guid.NewGuid(), serverSocket, framing, BufferSize, _argsPool);
 
         // Start the session
         var sessionTask = session.StartAsync(_globalCts.Token);

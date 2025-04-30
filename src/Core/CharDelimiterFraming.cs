@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 
 namespace AsyncSocket;
 
-public class CharDelimiterFraming : IMessageFraming
+public class CharDelimiterFraming : IMessageFraming<string>
 {
     private readonly StringBuilder _stringBuffer = new();
     private readonly ILogger<CharDelimiterFraming>? Logger;

@@ -10,8 +10,8 @@ builder.ConfigureServices((context, services) =>
 {
     services
         .AddScoped<LoggerFactory>()
-        .AddScoped<AsyncServer, AsyncEchoServer>()
-        .AddScoped<IMessageFramingFactory, CharDelimiterFramingFactory>()
+        .AddScoped<AsyncServer<string>, AsyncEchoServer>()
+        .AddScoped<IMessageFramingFactory<string>, CharDelimiterFramingFactory>()
         .AddScoped<AsyncServerConfig>(_ => new AsyncServerConfig
         {
             IpAddress = "127.0.0.1", 

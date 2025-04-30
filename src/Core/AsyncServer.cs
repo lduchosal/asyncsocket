@@ -5,25 +5,25 @@ using Microsoft.Extensions.Logging;
 
 namespace AsyncSocket;
 
-public abstract class AsyncServer : IAsyncDisposable
+public abstract class AsyncServer<T> : IAsyncDisposable
 {
-    private readonly ILogger<AsyncServer>? _logger;
+    private readonly ILogger<AsyncServer<T>>? _logger;
     private readonly ILoggerFactory? _loggerFactory;
-    private readonly IMessageFramingFactory _framingFactory;
+    private readonly IMessageFramingFactory<T> _framingFactory;
     
     private readonly IPEndPoint _endpoint;
     private readonly Socket _listener;
-    private readonly ConcurrentDictionary<Guid, ClientSession> _clients = new();
+    private readonly ConcurrentDictionary<Guid, ClientSession<T>> _clients = new();
     private readonly SemaphoreSlim _maxConnectionsSemaphore;
     private readonly SocketAsyncEventArgsPool _argsPool = new();
     private readonly int _maxConnection;
     private readonly int _bufferSize;
 
-    internal AsyncServer(AsyncServerConfig config, IMessageFramingFactory framingFactory) : this(config, framingFactory, null, null)
+    internal AsyncServer(AsyncServerConfig config, IMessageFramingFactory<T> framingFactory) : this(config, framingFactory, null, null)
     {
     }
 
-    public AsyncServer(AsyncServerConfig config, IMessageFramingFactory framingFactory, ILogger<AsyncServer>? logger, ILoggerFactory? loggerFactory)
+    public AsyncServer(AsyncServerConfig config, IMessageFramingFactory<T> framingFactory, ILogger<AsyncServer<T>>? logger, ILoggerFactory? loggerFactory)
     {
         _maxConnection = config.MaxConnections;
         _bufferSize = config.BufferSize;
@@ -101,10 +101,10 @@ public abstract class AsyncServer : IAsyncDisposable
         {
             var clientSocket = await acceptTask;
             var clientId = Guid.NewGuid();
-            var loggerClient = _loggerFactory?.CreateLogger<ClientSession>();
+            var loggerClient = _loggerFactory?.CreateLogger<ClientSession<T>>();
 
             var framing = _framingFactory.CreateFraming();
-            var client = new ClientSession(loggerClient ,clientId, clientSocket, framing, _bufferSize, _argsPool);
+            var client = new ClientSession<T>(loggerClient ,clientId, clientSocket, framing, _bufferSize, _argsPool);
 
             await HandleConnectedAsync(client);
 
@@ -133,9 +133,9 @@ public abstract class AsyncServer : IAsyncDisposable
         }
     }
 
-    protected abstract Task HandleDisconnectedAsync(ClientSession client);
-    protected abstract Task HandleMessageAsync(ClientSession client, string message);
-    protected abstract Task HandleConnectedAsync(ClientSession client);
+    protected abstract Task HandleDisconnectedAsync(ClientSession<T> client);
+    protected abstract Task HandleMessageAsync(ClientSession<T> client, T message);
+    protected abstract Task HandleConnectedAsync(ClientSession<T> client);
 
     public async ValueTask DisposeAsync()
     {

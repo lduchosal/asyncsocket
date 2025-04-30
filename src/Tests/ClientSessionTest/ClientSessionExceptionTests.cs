@@ -299,7 +299,7 @@ namespace Tests.ClientSessionTest
         }
 
         // Helper method to create a client-server socket pair and client session
-        private async Task<(ClientSession session, Socket clientSocket, Task sessionTask)> 
+        private async Task<(ClientSession<string> session, Socket clientSocket, Task sessionTask)> 
             CreateClientSessionPairAsync(CancellationToken token = default, ISocketAsyncEventArgsPool? pool = null)
         {
                         
@@ -325,7 +325,7 @@ namespace Tests.ClientSessionTest
             
             listener.Stop();
             var framing = new CharDelimiterFraming(null, Delimiter, MaxSiteWithoutADelimiter);
-            var session = new ClientSession(null, Guid.NewGuid(), serverSocket, framing, BufferSize, poolToUse);
+            var session = new ClientSession<string>(null, Guid.NewGuid(), serverSocket, framing, BufferSize, poolToUse);
 
             // Start the session
             var sessionTask = session.StartAsync(tokenToUse);

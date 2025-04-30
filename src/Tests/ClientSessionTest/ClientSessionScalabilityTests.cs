@@ -36,7 +36,7 @@ public class ClientSessionScalabilityTests
     {
         // Arrange
         const int numSessions = 100;
-        var sessionPairs = new List<(ClientSession session, Socket clientSocket, Task sessionTask)>(numSessions);
+        var sessionPairs = new List<(ClientSession<string> session, Socket clientSocket, Task sessionTask)>(numSessions);
         var messenger = new ConcurrentDictionary<Guid, ConcurrentBag<string>>();
             
         // Create multiple client/server socket pairs and sessions
@@ -50,7 +50,7 @@ public class ClientSessionScalabilityTests
                 
             session.MessageReceived += (sender, message) => 
             {
-                if (sender is ClientSession s && messenger.TryGetValue(s.Id, out var bag))
+                if (sender is ClientSession<string> s && messenger.TryGetValue(s.Id, out var bag))
                 {
                     bag.Add(message);
                 }
@@ -136,7 +136,7 @@ public class ClientSessionScalabilityTests
         const int messagesPerSession = 100;
         const int messageSize = 1024; // 1 KB messages
             
-        var sessionPairs = new List<(ClientSession session, Socket clientSocket, Task sessionTask)>();
+        var sessionPairs = new List<(ClientSession<string> session, Socket clientSocket, Task sessionTask)>();
         var performanceData = new List<(int sessions, double throughput, double cpuUsage, long memoryUsage)>();
         var rand = new Random();
         string testMessage = new string('X', messageSize - 1) + Delimiter;
@@ -277,7 +277,7 @@ public class ClientSessionScalabilityTests
         const int operationsPerSession = 50;
             
         var customPool = new SocketAsyncEventArgsPool(poolSize);
-        var sessions = new ConcurrentBag<(ClientSession session, Socket clientSocket, Task sessionTask)>();
+        var sessions = new ConcurrentBag<(ClientSession<string> session, Socket clientSocket, Task sessionTask)>();
         var random = new Random();
             
         // Act - Create and use sessions in batches to test pool utilization
@@ -429,7 +429,7 @@ public class ClientSessionScalabilityTests
         for (int batch = 1; batch <= totalSessions / batchSize; batch++)
         {
             // Create a batch of sessions
-            var sessionPairs = new List<(ClientSession session, Socket clientSocket, Task sessionTask)>();
+            var sessionPairs = new List<(ClientSession<string> session, Socket clientSocket, Task sessionTask)>();
             for (int i = 0; i < batchSize; i++)
             {
                 var pair = await CreateClientSessionPairAsync();
@@ -522,7 +522,7 @@ public class ClientSessionScalabilityTests
     }
 
     // Helper method to create a client-server socket pair and client session
-    private async Task<(ClientSession session, Socket clientSocket, Task sessionTask)> 
+    private async Task<(ClientSession<string> session, Socket clientSocket, Task sessionTask)> 
         CreateClientSessionPairAsync(SocketAsyncEventArgsPool customPool = null)
     {
         var listener = new TcpListener(IPAddress.Loopback, 0);
@@ -543,7 +543,7 @@ public class ClientSessionScalabilityTests
             
         var framing = new CharDelimiterFraming(null, Delimiter, MaxSiteWithoutADelimiter);
         var pool = customPool ?? _argsPool;
-        var session = new ClientSession(null, Guid.NewGuid(), serverSocket, framing, BufferSize, pool);
+        var session = new ClientSession<string>(null, Guid.NewGuid(), serverSocket, framing, BufferSize, pool);
 
         // Start the session
         var sessionTask = session.StartAsync(_globalCts.Token);
@@ -555,7 +555,7 @@ public class ClientSessionScalabilityTests
     }
 
     // Helper method to use a session for random operations
-    private async Task UseSessionRandomlyAsync(ClientSession session, Socket clientSocket, int operations)
+    private async Task UseSessionRandomlyAsync(ClientSession<string> session, Socket clientSocket, int operations)
     {
         try
         {

@@ -1,7 +1,7 @@
 namespace AsyncSocket;
 
-public interface IMessageFraming
+public interface IMessageFraming<T>
 {
     bool Process(byte[] receiveBuffer, int bytesRead);
-    string? Next();
+    T? Next();
 }

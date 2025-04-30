@@ -15,7 +15,7 @@ namespace Tests.ClientSessionTest
         private Socket _serverSocket;
         private Socket _clientSocket;
         private SocketAsyncEventArgsPool _argsPool;
-        private ClientSession _clientSession;
+        private ClientSession<string> _clientSession;
         private readonly CancellationTokenSource _cts = new (TimeSpan.FromSeconds(5));
         private readonly IPEndPoint _endpoint = new (IPAddress.Loopback, 0);
         private CharDelimiterFraming _framing;
@@ -40,7 +40,7 @@ namespace Tests.ClientSessionTest
             _framing = new CharDelimiterFraming(null, Delimiter, MaxSiteWithoutADelimiter);
 
             // Create client session
-            _clientSession = new ClientSession(null, Guid.NewGuid(), acceptedSocket, _framing, BufferSize, _argsPool);
+            _clientSession = new ClientSession<string>(null, Guid.NewGuid(), acceptedSocket, _framing, BufferSize, _argsPool);
         }
 
 

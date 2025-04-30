@@ -5,11 +5,11 @@ using Microsoft.Extensions.Logging;
 
 namespace AsyncSocket;
 
-public class ClientSession(
-    ILogger<ClientSession>? logger,
+public class ClientSession<T>(
+    ILogger<ClientSession<T>>? logger,
     Guid id,
     Socket socket,
-    IMessageFraming messageFraming,
+    IMessageFraming<T> messageFraming,
     int bufferSize,
     ISocketAsyncEventArgsPool argsPool)
 {
@@ -20,10 +20,10 @@ public class ClientSession(
     private bool IsRunning { get; set; }
 
 
-    public event EventHandler<string> MessageReceived = delegate { };
+    public event EventHandler<T> MessageReceived = delegate { };
     public event EventHandler<Guid> Disconnected = delegate { };
 
-    public ClientSession(Guid id, Socket socket, IMessageFraming messageFraming, int bufferSize, ISocketAsyncEventArgsPool argsPool)
+    public ClientSession(Guid id, Socket socket, IMessageFraming<T> messageFraming, int bufferSize, ISocketAsyncEventArgsPool argsPool)
     :this(null, id, socket, messageFraming, bufferSize, argsPool)
     {
     }
@@ -147,7 +147,7 @@ public class ClientSession(
 
     private async Task ProcessDelimitedMessagesAsync()
     {
-        string? message;
+        T? message;
         while ((message = messageFraming.Next()) != null) 
         {
             // Raise event with the message
