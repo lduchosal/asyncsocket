@@ -20,22 +20,17 @@ public abstract class AsyncServer<T> : IAsyncDisposable
     private readonly int _maxConnection;
     private readonly int _bufferSize;
 
-    internal AsyncServer(AsyncServerConfig config, IMessageFramingFactory<T> framingFactory) : this(config, framingFactory, null, null)
-    {
-    }
-
-    public AsyncServer(AsyncServerConfig config, IMessageFramingFactory<T> framingFactory, ILogger<AsyncServer<T>>? logger, ILoggerFactory? loggerFactory)
+    public AsyncServer(AsyncServerConfig config, IMessageFramingFactory<T> framingFactory, ILoggerFactory? loggerFactory = null)
     {
         _maxConnection = config.MaxConnections;
         _bufferSize = config.BufferSize;
         _endpoint = new IPEndPoint(IPAddress.Parse(config.IpAddress), config.Port);
         _maxConnectionsSemaphore = new SemaphoreSlim(_maxConnection, _maxConnection);
         _listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, config.ProtocolType);
-        _logger = logger;
+        _logger = loggerFactory?.CreateLogger<AsyncServer<T>>();
         _loggerFactory = loggerFactory;
         _framingFactory = framingFactory;
     }
-
 
     public async Task RunAsync(CancellationToken cancellationToken)
     {

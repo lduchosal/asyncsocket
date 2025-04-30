@@ -7,8 +7,8 @@ public class AsyncEchoServer(
     ILogger<AsyncEchoServer>? logger,
     AsyncServerConfig config, 
     IMessageFramingFactory<string> framingFactory, 
-    ILogger<AsyncServer<string>>? logger2, 
-    ILoggerFactory? loggerFactory) : AsyncServer<string>(config, framingFactory, logger2, loggerFactory)
+    ILoggerFactory? loggerFactory) 
+    : AsyncServer<string>(config, framingFactory, loggerFactory)
 {
     protected override Task HandleConnectedAsync(ClientSession<string> client)
     {

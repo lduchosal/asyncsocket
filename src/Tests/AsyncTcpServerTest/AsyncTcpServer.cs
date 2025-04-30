@@ -4,22 +4,13 @@ using Microsoft.Extensions.Logging;
 
 namespace Tests.AsyncTcpServerTest;
 
-public class AsyncTcpServer : AsyncServer<string>
+public class AsyncTcpServer(
+    AsyncServerConfig config,
+    IMessageFramingFactory<string> framingFactory,
+    ILoggerFactory? loggerFactory = null)
+    : AsyncServer<string>(config, framingFactory, loggerFactory)
 {
-    private readonly ILogger<AsyncTcpServer>? Logger;
-
-    public AsyncTcpServer(ILogger<AsyncTcpServer>? logger,
-        AsyncServerConfig config, 
-        IMessageFramingFactory<string> framingFactory, 
-        ILogger<AsyncServer<string>>? logger2, 
-        ILoggerFactory? loggerFactory) : base(config, framingFactory, logger2, loggerFactory)
-    {
-        Logger = logger;
-    }
-    
-    public AsyncTcpServer(AsyncServerConfig config, IMessageFramingFactory<string> framingFactory) : base(config, framingFactory, null, null)
-    {
-    }
+    private readonly ILogger<AsyncTcpServer>? Logger = loggerFactory?.CreateLogger<AsyncTcpServer>();
 
     protected override Task HandleConnectedAsync(ClientSession<string> client)
     {
