@@ -9,6 +9,8 @@ public abstract class AsyncServer : IAsyncDisposable
 {
     private readonly ILogger<AsyncServer>? _logger;
     private readonly ILoggerFactory? _loggerFactory;
+    private readonly IMessageFramingFactory _framingFactory;
+    
     private readonly IPEndPoint _endpoint;
     private readonly Socket _listener;
     private readonly ConcurrentDictionary<Guid, ClientSession> _clients = new();
@@ -17,11 +19,11 @@ public abstract class AsyncServer : IAsyncDisposable
     private readonly int _maxConnection;
     private readonly int _bufferSize;
 
-    internal AsyncServer(AsyncServerConfig config) : this(config, null, null)
+    internal AsyncServer(AsyncServerConfig config, IMessageFramingFactory framingFactory) : this(config, framingFactory, null, null)
     {
     }
 
-    public AsyncServer(AsyncServerConfig config, ILogger<AsyncServer>? logger, ILoggerFactory? loggerFactory)
+    public AsyncServer(AsyncServerConfig config, IMessageFramingFactory framingFactory, ILogger<AsyncServer>? logger, ILoggerFactory? loggerFactory)
     {
         _maxConnection = config.MaxConnections;
         _bufferSize = config.BufferSize;
@@ -30,6 +32,7 @@ public abstract class AsyncServer : IAsyncDisposable
         _listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, config.ProtocolType);
         _logger = logger;
         _loggerFactory = loggerFactory;
+        _framingFactory = framingFactory;
     }
 
 
@@ -98,12 +101,9 @@ public abstract class AsyncServer : IAsyncDisposable
         {
             var clientSocket = await acceptTask;
             var clientId = Guid.NewGuid();
-            char delimiter = '\n';
-            int maxSizeWithoutADelimiter = 1024;
-            var loggerFraming = _loggerFactory?.CreateLogger<CharDelimiterFraming>();
             var loggerClient = _loggerFactory?.CreateLogger<ClientSession>();
-            
-            var framing = new CharDelimiterFraming(loggerFraming, delimiter, maxSizeWithoutADelimiter);
+
+            var framing = _framingFactory.CreateFraming();
             var client = new ClientSession(loggerClient ,clientId, clientSocket, framing, _bufferSize, _argsPool);
 
             await HandleConnectedAsync(client);

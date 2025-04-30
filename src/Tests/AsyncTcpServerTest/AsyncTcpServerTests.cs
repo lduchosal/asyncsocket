@@ -17,7 +17,8 @@ public class AsyncTcpServerTests
         await Assert.ThrowsExceptionAsync<FormatException>(async () =>
         {
             var config = new AsyncServerConfig { IpAddress = "invalid-ip", Port = ServerPort };
-            await using var server = new AsyncTcpServer(config);
+            var framingFactory = new CharDelimiterFramingFactory();
+            await using var server = new AsyncTcpServer(config, framingFactory);
             var tokenSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(100));
             await server.RunAsync(tokenSource.Token);
         });
@@ -28,7 +29,8 @@ public class AsyncTcpServerTests
     {
         // Arrange
         var config = new AsyncServerConfig { IpAddress = ServerIp, Port = ServerPort };
-        await using var server = new AsyncTcpServer(config);
+        var framingFactory = new CharDelimiterFramingFactory();
+        await using AsyncTcpServer server = new(config, framingFactory);
         var cts = new CancellationTokenSource(TimeSpan.FromSeconds(1));
 
         // Act & Assert
@@ -49,7 +51,8 @@ public class AsyncTcpServerTests
     {
         // Arrange
         var config = new AsyncServerConfig { IpAddress = ServerIp, Port = ServerPort };
-        await using var server = new AsyncTcpServer(config);
+        var framingFactory = new CharDelimiterFramingFactory();
+        await using AsyncTcpServer server = new(config, framingFactory);
         var cts = new CancellationTokenSource();
 
         // Start server
@@ -78,7 +81,8 @@ public class AsyncTcpServerTests
     {
         // Arrange
         var config = new AsyncServerConfig { IpAddress = ServerIp, Port = ServerPort };
-        await using var server = new AsyncTcpServer(config);
+        var framingFactory = new CharDelimiterFramingFactory();
+        await using var server = new AsyncTcpServer(config, framingFactory);
         var cts = new CancellationTokenSource();
         var serverTask = server.RunAsync(cts.Token);
         await Task.Delay(1000); // Allow server to initialize
@@ -112,7 +116,8 @@ public class AsyncTcpServerTests
         // Arrange
         const int clientCount = 5;
         var config = new AsyncServerConfig { IpAddress = ServerIp, Port = ServerPort, MaxConnections = 10};
-        await using var server = new AsyncTcpServer(config);
+        var framingFactory = new CharDelimiterFramingFactory();
+        await using var server = new AsyncTcpServer(config, framingFactory);
         var cts = new CancellationTokenSource(5000);
         var serverTask = server.RunAsync(cts.Token);
         await Task.Delay(200, cts.Token); // Allow server to initialize
@@ -152,7 +157,8 @@ public class AsyncTcpServerTests
     {
         // Arrange
         var config = new AsyncServerConfig { IpAddress = ip, Port = port };
-        await using var server = new AsyncTcpServer(config);
+        var framingFactory = new CharDelimiterFramingFactory();
+        await using var server = new AsyncTcpServer(config, framingFactory);
         var cts = new CancellationTokenSource();
 
         // Act
@@ -181,7 +187,8 @@ public class AsyncTcpServerTests
     {
         // Arrange
         var config = new AsyncServerConfig { IpAddress = ServerIp, Port = ServerPort };
-        await using var server = new AsyncTcpServer(config);
+        var framingFactory = new CharDelimiterFramingFactory();
+        await using var server = new AsyncTcpServer(config, framingFactory);
         var cts = new CancellationTokenSource();
         var serverTask = server.RunAsync(cts.Token);
         await Task.Delay(100); // Allow server to initialize
@@ -221,7 +228,8 @@ public class AsyncTcpServerTests
         // Arrange - in real implementation you'd use a mock or derived test class with lower MaxConnections
         const int testMaxConnections = 10; // Assuming MaxConnections was set to 10 for testing
         var config = new AsyncServerConfig { IpAddress = ServerIp, Port = ServerPort, MaxConnections = 2};
-        await using var server = new AsyncTcpServer(config);
+        var framingFactory = new CharDelimiterFramingFactory();
+        await using var server = new AsyncTcpServer(config, framingFactory);
         var cts = new CancellationTokenSource(millisecondsDelay: 5000);
         var serverTask = server.RunAsync(cts.Token);
         await Task.Delay(1000, cts.Token); // Allow server to initialize

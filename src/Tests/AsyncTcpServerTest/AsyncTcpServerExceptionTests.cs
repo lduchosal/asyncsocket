@@ -15,7 +15,8 @@ public class AsyncTcpServerExceptionTests
     {
         // Arrange
         var config = new AsyncServerConfig { IpAddress = "127.0.0.1", Port = 8080, ProtocolType = ProtocolType.Tcp };
-        var server = new AsyncTcpServer(config);
+        var framingFactory = new CharDelimiterFramingFactory();
+        var server = new AsyncTcpServer(config, framingFactory);
         using var cts = new CancellationTokenSource();
 
         // Act & Assert
@@ -30,15 +31,16 @@ public class AsyncTcpServerExceptionTests
     }
 
     [TestMethod]
-    public void RunAsync_InvalidIPAddress_ThrowsFormatException()
+    public async Task RunAsync_InvalidIPAddress_ThrowsFormatException()
     {
         // Act & Assert
-        Assert.ThrowsException<FormatException>(
-            () =>
+        await Assert.ThrowsExceptionAsync<FormatException>(
+            async () =>
             {
                 // Arrange
                 var config = new AsyncServerConfig { IpAddress = "invalid_ip", Port = 8080, ProtocolType = ProtocolType.Tcp };
-                var server = new AsyncTcpServer(config);
+                var framingFactory = new CharDelimiterFramingFactory();
+                await using AsyncTcpServer server = new(config, framingFactory);
             });
     }
 
@@ -48,7 +50,8 @@ public class AsyncTcpServerExceptionTests
         // Arrange
         // First server to occupy the port
         var config = new AsyncServerConfig { IpAddress = "127.0.0.1", Port = 8081 };
-        var server1 = new AsyncTcpServer(config);
+        var framingFactory = new CharDelimiterFramingFactory();
+        var server1 = new AsyncTcpServer(config, framingFactory);
         using var cts1 = new CancellationTokenSource();
         var task1 = server1.RunAsync(cts1.Token);
 
@@ -56,7 +59,7 @@ public class AsyncTcpServerExceptionTests
         await Task.Delay(100);
 
         // Second server trying to use the same port
-        var server2 = new AsyncTcpServer(config);
+        AsyncTcpServer server2 = new(config, framingFactory);
         using var cts2 = new CancellationTokenSource();
 
         // Act & Assert
@@ -82,7 +85,8 @@ public class AsyncTcpServerExceptionTests
     {
         // Arrange
         var config = new AsyncServerConfig { IpAddress = "127.0.0.1", Port = 8082, MaxConnections = 1};
-        await using var server = new AsyncTcpServer(config);
+        var framingFactory = new CharDelimiterFramingFactory();
+        await using var server = new AsyncTcpServer(config, framingFactory);
         using var cts = new CancellationTokenSource(5000);
         var serverTask = server.RunAsync(cts.Token);
 

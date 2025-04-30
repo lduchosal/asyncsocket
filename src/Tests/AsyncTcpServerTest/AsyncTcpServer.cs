@@ -9,13 +9,14 @@ public class AsyncTcpServer : AsyncServer
 
     public AsyncTcpServer(ILogger<AsyncTcpServer>? logger,
         AsyncServerConfig config, 
+        IMessageFramingFactory framingFactory, 
         ILogger<AsyncServer>? logger2, 
-        ILoggerFactory? loggerFactory) : base(config, logger2, loggerFactory)
+        ILoggerFactory? loggerFactory) : base(config, framingFactory, logger2, loggerFactory)
     {
         Logger = logger;
     }
     
-    public AsyncTcpServer(AsyncServerConfig config) : base(config, null, null)
+    public AsyncTcpServer(AsyncServerConfig config, IMessageFramingFactory framingFactory) : base(config, framingFactory, null, null)
     {
     }
 

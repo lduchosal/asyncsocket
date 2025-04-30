@@ -1,4 +1,5 @@
-﻿using AsyncSocket;
+﻿using System.Net.Sockets;
+using AsyncSocket;
 using EchoServer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -10,7 +11,13 @@ builder.ConfigureServices((context, services) =>
     services
         .AddScoped<LoggerFactory>()
         .AddScoped<AsyncServer, AsyncEchoServer>()
-        .AddScoped<AsyncServerConfig>(_ => new AsyncServerConfig { IpAddress = "127.0.0.1", Port = 7777 })
+        .AddScoped<IMessageFramingFactory, CharDelimiterFramingFactory>()
+        .AddScoped<AsyncServerConfig>(_ => new AsyncServerConfig
+        {
+            IpAddress = "127.0.0.1", 
+            Port = 7777, 
+            ProtocolType = ProtocolType.Tcp
+        })
         .AddHostedService<EchoService>();
 });
 

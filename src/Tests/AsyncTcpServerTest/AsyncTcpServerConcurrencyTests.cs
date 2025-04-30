@@ -27,7 +27,8 @@ public class AsyncTcpServerConcurrencyTests
         // Arrange
         using CancellationTokenSource cts = new(1000);
         var config = new AsyncServerConfig { IpAddress = ServerIp, Port = _port, MaxConnections = connectionCount};
-        await using var server = new AsyncTcpServer(config);
+        var framingFactory = new CharDelimiterFramingFactory();
+        await using var server = new AsyncTcpServer(config, framingFactory);
         var serverTask = server.RunAsync(cts.Token);
 
         // Wait for server to start
@@ -84,7 +85,8 @@ public class AsyncTcpServerConcurrencyTests
         // Arrange
         using CancellationTokenSource cts = new(1000);
         var config = new AsyncServerConfig { IpAddress = ServerIp, Port = _port, MaxConnections = maxConnections};
-        await using AsyncTcpServer server = new (config);
+        var framingFactory = new CharDelimiterFramingFactory();
+        await using var server = new AsyncTcpServer(config, framingFactory);
         var serverTask = server.RunAsync(cts.Token);
 
         // Wait for server to start
@@ -152,7 +154,8 @@ public class AsyncTcpServerConcurrencyTests
         cts.Token.Register(() => { Console.WriteLine("Canceled token"); });
         const int connectionCount = 5;
         var config = new AsyncServerConfig { IpAddress = ServerIp, Port = _port, MaxConnections = connectionCount};
-        await using AsyncTcpServer server = new (config);
+        var framingFactory = new CharDelimiterFramingFactory();
+        await using var server = new AsyncTcpServer(config, framingFactory);
         var serverTask = server.RunAsync(cts.Token);
 
         // Wait for server to start
@@ -191,7 +194,8 @@ public class AsyncTcpServerConcurrencyTests
         await Assert.ThrowsExceptionAsync<ArgumentOutOfRangeException>(async () =>
         {
             var config = new AsyncServerConfig { IpAddress = ServerIp, Port = invalidPort };
-            await using AsyncTcpServer server = new (config);
+            var framingFactory = new CharDelimiterFramingFactory();
+            await using var server = new AsyncTcpServer(config, framingFactory);
             using var tokenSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(1000));
             await server.RunAsync(tokenSource.Token);
         });
@@ -204,7 +208,8 @@ public class AsyncTcpServerConcurrencyTests
         // Arrange
         using CancellationTokenSource cts = new(1000);
         var config = new AsyncServerConfig { IpAddress = ServerIp, Port = _port, MaxConnections = 1};
-        await using AsyncTcpServer server = new (config);
+        var framingFactory = new CharDelimiterFramingFactory();
+        await using var server = new AsyncTcpServer(config, framingFactory);
         var serverTask = server.RunAsync(cts.Token);
 
         // Wait for server to start

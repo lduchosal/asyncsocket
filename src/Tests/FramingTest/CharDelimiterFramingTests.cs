@@ -8,16 +8,10 @@ namespace Tests.FramingTest;
 [TestClass]
 public class CharDelimiterFramingTests
 {
-    private Mock<ILogger<CharDelimiterFraming>> _loggerMock;
+    private readonly Mock<ILogger<CharDelimiterFraming>> _loggerMock = new ();
     private const char DefaultDelimiter = ';';
     private const int DefaultMaxSize = 1024;
-
-    [TestInitialize]
-    public void Setup()
-    {
-        _loggerMock = new Mock<ILogger<CharDelimiterFraming>>();
-    }
-
+    
     [TestMethod]
     public void Constructor_NullLogger_DoesNotThrow()
     {
