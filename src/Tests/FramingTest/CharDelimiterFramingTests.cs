@@ -1,5 +1,6 @@
 using System.Text;
 using AsyncSocket;
+using AsyncSocket.Framing;
 using Microsoft.Extensions.Logging;
 using Moq;
 

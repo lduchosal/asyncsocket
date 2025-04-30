@@ -1,3 +1,5 @@
+using AsyncSocket.Framing;
+
 namespace Tests.AsyncTcpServerTest;
 
 using System;

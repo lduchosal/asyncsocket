@@ -1,7 +1,7 @@
 using System.Text;
 using Microsoft.Extensions.Logging;
 
-namespace AsyncSocket;
+namespace AsyncSocket.Framing;
 
 public class CharDelimiterFraming : IMessageFraming<string>
 {

@@ -1,4 +1,4 @@
-namespace AsyncSocket;
+namespace AsyncSocket.Framing;
 
 public interface IMessageFraming<T>
 {

@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Logging;
 
-namespace AsyncSocket;
+namespace AsyncSocket.Framing;
 
 public interface IMessageFramingFactory<T>
 {

@@ -1,5 +1,6 @@
 using System.Net.Sockets;
 using System.Text;
+using AsyncSocket.Framing;
 using AsyncSocket.Properties;
 using Microsoft.Extensions.Logging;
 

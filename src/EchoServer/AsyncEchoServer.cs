@@ -1,4 +1,5 @@
 using AsyncSocket;
+using AsyncSocket.Framing;
 using Microsoft.Extensions.Logging;
 
 namespace EchoServer;
