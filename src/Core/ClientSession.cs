@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 
 namespace AsyncSocket;
 
-class ClientSession
+public class ClientSession
 {
     public Guid Id { get; }
     private readonly ILogger<ClientSession>? _logger;

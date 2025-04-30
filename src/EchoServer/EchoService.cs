@@ -6,7 +6,7 @@ namespace EchoServer;
 
 public sealed class EchoService(
     ILogger<EchoService> logger,
-    AsyncTcpServer server) : BackgroundService
+    AsyncServer server) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {

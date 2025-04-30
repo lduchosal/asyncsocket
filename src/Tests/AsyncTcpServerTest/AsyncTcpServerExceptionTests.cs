@@ -14,7 +14,7 @@ public class AsyncTcpServerExceptionTests
     public async Task RunAsync_CancellationRequested_ThrowsOperationCanceledException()
     {
         // Arrange
-        var config = new AsyncServerConfig { IpAddress = "127.0.0.1", Port = 8080 };
+        var config = new AsyncServerConfig { IpAddress = "127.0.0.1", Port = 8080, ProtocolType = ProtocolType.Tcp };
         var server = new AsyncTcpServer(config);
         using var cts = new CancellationTokenSource();
 
@@ -37,7 +37,7 @@ public class AsyncTcpServerExceptionTests
             () =>
             {
                 // Arrange
-                var config = new AsyncServerConfig { IpAddress = "invalid_ip", Port = 8080 };
+                var config = new AsyncServerConfig { IpAddress = "invalid_ip", Port = 8080, ProtocolType = ProtocolType.Tcp };
                 var server = new AsyncTcpServer(config);
             });
     }

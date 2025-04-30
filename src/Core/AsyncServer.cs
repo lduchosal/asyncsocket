@@ -5,9 +5,9 @@ using Microsoft.Extensions.Logging;
 
 namespace AsyncSocket;
 
-public class AsyncTcpServer : IAsyncDisposable
+public abstract class AsyncServer : IAsyncDisposable
 {
-    private readonly ILogger<AsyncTcpServer>? _logger;
+    private readonly ILogger<AsyncServer>? _logger;
     private readonly ILoggerFactory? _loggerFactory;
     private readonly IPEndPoint _endpoint;
     private readonly Socket _listener;
@@ -16,17 +16,22 @@ public class AsyncTcpServer : IAsyncDisposable
     private readonly SocketAsyncEventArgsPool _argsPool = new();
     private readonly int _maxConnection;
     private readonly int _bufferSize;
-    
-    public AsyncTcpServer(AsyncServerConfig config, ILogger<AsyncTcpServer>? logger = null, ILoggerFactory? loggerFactory = null)
+
+    internal AsyncServer(AsyncServerConfig config) : this(config, null, null)
+    {
+    }
+
+    public AsyncServer(AsyncServerConfig config, ILogger<AsyncServer>? logger, ILoggerFactory? loggerFactory)
     {
         _maxConnection = config.MaxConnections;
         _bufferSize = config.BufferSize;
         _endpoint = new IPEndPoint(IPAddress.Parse(config.IpAddress), config.Port);
         _maxConnectionsSemaphore = new SemaphoreSlim(_maxConnection, _maxConnection);
-        _listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+        _listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, config.ProtocolType);
         _logger = logger;
         _loggerFactory = loggerFactory;
     }
+
 
     public async Task RunAsync(CancellationToken cancellationToken)
     {
@@ -122,25 +127,9 @@ public class AsyncTcpServer : IAsyncDisposable
         }
     }
 
-    private Task HandleConnectedAsync(ClientSession client)
-    {
-        _logger?.LogDebug("Client Connected {clientId}", client.Id);
-        return Task.CompletedTask;
-    }
-    private Task HandleDisconnectedAsync(ClientSession client)
-    {
-        _logger?.LogDebug("Client Disconnected {clientId}", client.Id);
-        return Task.CompletedTask;
-    }
-    
-    private async Task HandleMessageAsync(ClientSession client, string message)
-    {
-        _logger?.LogDebug($"Received from {client.Id}: {message}");
-            
-        // Echo the message back with the delimiter
-        string response = $"Server received: {message}";
-        await client.SendAsync(response);
-    }
+    protected abstract Task HandleDisconnectedAsync(ClientSession client);
+    protected abstract Task HandleMessageAsync(ClientSession client, string message);
+    protected abstract Task HandleConnectedAsync(ClientSession client);
 
     public async ValueTask DisposeAsync()
     {

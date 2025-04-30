@@ -7,8 +7,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="da6e33fb-0b4c-4a70-816e-9b9fdf55be0f" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.AsyncSocket/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.AsyncSocket/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="da6e33fb-0b4c-4a70-816e-9b9fdf55be0f" name="Changes" comment="Fix: unit test">
+      <change beforePath="$PROJECT_DIR$/Core/AsyncTcpServer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/AsyncTcpServer.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,8 +54,7 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/ccdf52e13a7748cb81d6f3e165ce13824c600/de/4be353e4/ConcurrentStack`1.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/24dd1164ba47541cb1d3eb011e638e16953dbea3ae3f4dc208c3bbf3e96298a/ServiceCollectionServiceExtensions.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/df3a5d166359f3be77c6a4c18d8b451173aecfe3a6673cbe1545fdc424a40/Assert.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/q/Projects/asyncsocket/src/Core/AsyncTcpServer.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/q/Projects/asyncsocket/src/Core/AsyncTcpServer.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/q/Projects/asyncsocket/src/Tests/AsyncTcpServerTest/AsyncTcpServerConcurrencyTests.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProjectColorInfo">{
@@ -71,7 +70,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    ".NET Project.EchoServer.executor": "Run",
+    ".NET Project.EchoServer.executor": "Debug",
     "ASKED_ADD_EXTERNAL_FILES": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "d854a2dc-720d-4b1f-82a1-9ef6dad74278.executor": "Debug",
@@ -123,6 +122,7 @@
       <workItem from="1744916741661" duration="12990000" />
       <workItem from="1745130779533" duration="37758000" />
       <workItem from="1745755921763" duration="17719000" />
+      <workItem from="1745940485147" duration="3619000" />
     </task>
     <task id="LOCAL-00001" summary="Feat: SocketAsyncEventArgsPool / Tests">
       <option name="closed" value="true" />
@@ -164,7 +164,23 @@
       <option name="project" value="LOCAL" />
       <updated>1745908010514</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Chore: cleanup and refactor">
+      <option name="closed" value="true" />
+      <created>1745950310378</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1745950310378</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Fix: unit test">
+      <option name="closed" value="true" />
+      <created>1745950444444</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1745950444444</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -180,23 +196,38 @@
     <MESSAGE value="Feat: AsyncTcpServer Tests" />
     <MESSAGE value="Feat: AsyncTcpServer / Exceptions" />
     <MESSAGE value="Feat: EchoServer" />
-    <option name="LAST_COMMIT_MESSAGE" value="Feat: EchoServer" />
+    <MESSAGE value="Chore: cleanup and refactor" />
+    <MESSAGE value="Fix: unit test" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fix: unit test" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/Tests/AsyncTcpServerTest/AsyncTcpServerConcurrencyTests.cs</url>
-          <line>43</line>
+          <line>44</line>
           <properties documentPath="$PROJECT_DIR$/Tests/AsyncTcpServerTest/AsyncTcpServerConcurrencyTests.cs" containingFunctionPresentation="Lambda expression inside Method 'HandlesConcurrentConnections_WithinMaxConnections'">
             <startOffsets>
-              <option value="1148" />
+              <option value="1226" />
             </startOffsets>
             <endOffsets>
-              <option value="1202" />
+              <option value="1280" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="76" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Core/AsyncTcpServer.cs</url>
+          <line>25</line>
+          <properties documentPath="$PROJECT_DIR$/Core/AsyncTcpServer.cs" containingFunctionPresentation="Constructor 'AsyncTcpServer'">
+            <startOffsets>
+              <option value="892" />
+            </startOffsets>
+            <endOffsets>
+              <option value="931" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="77" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
