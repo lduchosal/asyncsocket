@@ -3,18 +3,30 @@ using Microsoft.Extensions.Logging;
 
 namespace AsyncSocket;
 
-public class CharDelimiterFraming(ILogger<CharDelimiterFraming>? logger, char delimiter, int maxSizeWithoutADelimiter) : IMessageFraming
+public class CharDelimiterFraming : IMessageFraming
 {
     private readonly StringBuilder _stringBuffer = new();
+    private readonly ILogger<CharDelimiterFraming>? Logger;
+    private readonly char Delimiter;
+    private readonly int MaxSizeWithoutADelimiter;
+
+    public CharDelimiterFraming(ILogger<CharDelimiterFraming>? logger, char delimiter, int maxSizeWithoutADelimiter)
+    {
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(maxSizeWithoutADelimiter);
+        
+        Logger = logger;
+        Delimiter = delimiter;
+        MaxSizeWithoutADelimiter = maxSizeWithoutADelimiter;
+    }
 
     public bool Process(byte[] receiveBuffer, int bytesRead)
     {
         string receivedText = Encoding.UTF8.GetString(receiveBuffer, 0, bytesRead);
         _stringBuffer.Append(receivedText);
-        if (_stringBuffer.Length > maxSizeWithoutADelimiter && 
-            _stringBuffer.ToString().IndexOf(delimiter) == -1)
+        if (_stringBuffer.Length > MaxSizeWithoutADelimiter && 
+            _stringBuffer.ToString().IndexOf(Delimiter) == -1)
         {
-            logger?.LogDebug("Buffer exceeded maximum size without delimiter.");
+            Logger?.LogDebug("Buffer exceeded maximum size without delimiter.");
             return false;
         }
 
@@ -23,7 +35,7 @@ public class CharDelimiterFraming(ILogger<CharDelimiterFraming>? logger, char de
 
     public string? Next()
     {
-        int delimiterPos = _stringBuffer.ToString().IndexOf(delimiter);
+        int delimiterPos = _stringBuffer.ToString().IndexOf(Delimiter);
         if (delimiterPos == -1)
         {
             return null;
