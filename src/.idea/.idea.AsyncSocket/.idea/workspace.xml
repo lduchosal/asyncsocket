@@ -7,8 +7,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="da6e33fb-0b4c-4a70-816e-9b9fdf55be0f" name="Changes" comment="Fix: unit test">
-      <change beforePath="$PROJECT_DIR$/Core/AsyncTcpServer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/AsyncTcpServer.cs" afterDir="false" />
+    <list default="true" id="da6e33fb-0b4c-4a70-816e-9b9fdf55be0f" name="Changes" comment="Feat: standardize">
+      <change afterPath="$PROJECT_DIR$/Core/CharDelimiterFraming.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Core/IMessageFraming.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.AsyncSocket/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.AsyncSocket/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/AsyncServer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/AsyncServer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/ClientSession.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/ClientSession.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tests/AsyncTcpServerTest/AsyncTcpServer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Tests/AsyncTcpServerTest/AsyncTcpServer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tests/ClientSessionTest/ClientSessionConcurrencyTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Tests/ClientSessionTest/ClientSessionConcurrencyTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tests/ClientSessionTest/ClientSessionExceptionTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Tests/ClientSessionTest/ClientSessionExceptionTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tests/ClientSessionTest/ClientSessionScalabilityTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Tests/ClientSessionTest/ClientSessionScalabilityTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tests/ClientSessionTest/ClientSessionStressTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Tests/ClientSessionTest/ClientSessionStressTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tests/ClientSessionTest/ClientSessionTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Tests/ClientSessionTest/ClientSessionTests.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,6 +64,7 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/ccdf52e13a7748cb81d6f3e165ce13824c600/de/4be353e4/ConcurrentStack`1.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/24dd1164ba47541cb1d3eb011e638e16953dbea3ae3f4dc208c3bbf3e96298a/ServiceCollectionServiceExtensions.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/df3a5d166359f3be77c6a4c18d8b451173aecfe3a6673cbe1545fdc424a40/Assert.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/q/Projects/asyncsocket/src/Tests/AsyncTcpServerTest/AsyncTcpServer.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Users/q/Projects/asyncsocket/src/Tests/AsyncTcpServerTest/AsyncTcpServerConcurrencyTests.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
@@ -70,7 +81,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    ".NET Project.EchoServer.executor": "Debug",
+    ".NET Project.EchoServer.executor": "Run",
     "ASKED_ADD_EXTERNAL_FILES": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "d854a2dc-720d-4b1f-82a1-9ef6dad74278.executor": "Debug",
@@ -122,7 +133,7 @@
       <workItem from="1744916741661" duration="12990000" />
       <workItem from="1745130779533" duration="37758000" />
       <workItem from="1745755921763" duration="17719000" />
-      <workItem from="1745940485147" duration="3619000" />
+      <workItem from="1745940485147" duration="10880000" />
     </task>
     <task id="LOCAL-00001" summary="Feat: SocketAsyncEventArgsPool / Tests">
       <option name="closed" value="true" />
@@ -180,7 +191,15 @@
       <option name="project" value="LOCAL" />
       <updated>1745950444444</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Feat: standardize">
+      <option name="closed" value="true" />
+      <created>1745991492375</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1745991492375</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -198,7 +217,8 @@
     <MESSAGE value="Feat: EchoServer" />
     <MESSAGE value="Chore: cleanup and refactor" />
     <MESSAGE value="Fix: unit test" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fix: unit test" />
+    <MESSAGE value="Feat: standardize" />
+    <option name="LAST_COMMIT_MESSAGE" value="Feat: standardize" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -217,17 +237,30 @@
           <option name="timeStamp" value="76" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Core/AsyncTcpServer.cs</url>
-          <line>25</line>
-          <properties documentPath="$PROJECT_DIR$/Core/AsyncTcpServer.cs" containingFunctionPresentation="Constructor 'AsyncTcpServer'">
+          <url>file://$PROJECT_DIR$/Core/CharDelimiterFraming.cs</url>
+          <line>11</line>
+          <properties documentPath="$PROJECT_DIR$/Core/CharDelimiterFraming.cs" containingFunctionPresentation="Method 'Process'">
             <startOffsets>
-              <option value="892" />
+              <option value="353" />
             </startOffsets>
             <endOffsets>
-              <option value="931" />
+              <option value="428" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="77" />
+          <option name="timeStamp" value="78" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Core/CharDelimiterFraming.cs</url>
+          <line>25</line>
+          <properties documentPath="$PROJECT_DIR$/Core/CharDelimiterFraming.cs" containingFunctionPresentation="Method 'Next'">
+            <startOffsets>
+              <option value="796" />
+            </startOffsets>
+            <endOffsets>
+              <option value="859" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="79" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

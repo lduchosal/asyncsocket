@@ -11,7 +11,9 @@ namespace Tests.ClientSessionTest
     public class ClientSessionExceptionTests
     {
         private const char Delimiter = '\n';
+        private const int MaxSiteWithoutADelimiter = 1024;
         private const int BufferSize = 1024;
+
         private SocketAsyncEventArgsPool _argsPool;
         private CancellationTokenSource _cts;
 
@@ -322,9 +324,9 @@ namespace Tests.ClientSessionTest
             Socket clientSocket = client.Client;
             
             listener.Stop();
-            
-            var session = new ClientSession(Guid.NewGuid(), serverSocket, Delimiter, BufferSize, poolToUse);
-            
+            var framing = new CharDelimiterFraming(null, Delimiter, MaxSiteWithoutADelimiter);
+            var session = new ClientSession(null, Guid.NewGuid(), serverSocket, framing, BufferSize, poolToUse);
+
             // Start the session
             var sessionTask = session.StartAsync(tokenToUse);
             

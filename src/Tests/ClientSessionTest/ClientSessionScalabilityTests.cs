@@ -11,6 +11,7 @@ namespace Tests.ClientSessionTest;
 public class ClientSessionScalabilityTests
 {
     private const char Delimiter = '\n';
+    private const int MaxSiteWithoutADelimiter = 1024;
     private const int BufferSize = 1024;
     private SocketAsyncEventArgsPool _argsPool;
     private CancellationTokenSource _globalCts;
@@ -540,9 +541,10 @@ public class ClientSessionScalabilityTests
             
         listener.Stop();
             
+        var framing = new CharDelimiterFraming(null, Delimiter, MaxSiteWithoutADelimiter);
         var pool = customPool ?? _argsPool;
-        var session = new ClientSession(Guid.NewGuid(), serverSocket, Delimiter, BufferSize, pool);
-            
+        var session = new ClientSession(null, Guid.NewGuid(), serverSocket, framing, BufferSize, pool);
+
         // Start the session
         var sessionTask = session.StartAsync(_globalCts.Token);
             

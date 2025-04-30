@@ -98,7 +98,13 @@ public abstract class AsyncServer : IAsyncDisposable
         {
             var clientSocket = await acceptTask;
             var clientId = Guid.NewGuid();
-            var client = new ClientSession(_loggerFactory?.CreateLogger<ClientSession>(),clientId, clientSocket, '\n', _bufferSize, _argsPool);
+            char delimiter = '\n';
+            int maxSizeWithoutADelimiter = 1024;
+            var loggerFraming = _loggerFactory?.CreateLogger<CharDelimiterFraming>();
+            var loggerClient = _loggerFactory?.CreateLogger<ClientSession>();
+            
+            var framing = new CharDelimiterFraming(loggerFraming, delimiter, maxSizeWithoutADelimiter);
+            var client = new ClientSession(loggerClient ,clientId, clientSocket, framing, _bufferSize, _argsPool);
 
             await HandleConnectedAsync(client);
 

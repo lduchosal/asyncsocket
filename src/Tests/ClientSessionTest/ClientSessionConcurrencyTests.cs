@@ -10,6 +10,7 @@ namespace Tests.ClientSessionTest
     public class ClientSessionConcurrencyTests
     {
         private const char Delimiter = '\n';
+        private const int MaxSiteWithoutADelimiter = 1024;
         private const int BufferSize = 1024;
         private Socket _serverSocket;
         private Socket _clientSocket;
@@ -17,6 +18,7 @@ namespace Tests.ClientSessionTest
         private ClientSession _clientSession;
         private readonly CancellationTokenSource _cts = new (TimeSpan.FromSeconds(5));
         private readonly IPEndPoint _endpoint = new (IPAddress.Loopback, 0);
+        private CharDelimiterFraming _framing;
 
         [TestInitialize]
         public void Setup()
@@ -33,10 +35,14 @@ namespace Tests.ClientSessionTest
             
             // Initialize args pool
             _argsPool = new SocketAsyncEventArgsPool(10);
-            
+
+            // Initialize framing
+            _framing = new CharDelimiterFraming(null, Delimiter, MaxSiteWithoutADelimiter);
+
             // Create client session
-            _clientSession = new ClientSession(Guid.NewGuid(), acceptedSocket, Delimiter, BufferSize, _argsPool);
+            _clientSession = new ClientSession(null, Guid.NewGuid(), acceptedSocket, _framing, BufferSize, _argsPool);
         }
+
 
 
         [TestCleanup]

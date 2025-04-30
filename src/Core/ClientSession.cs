@@ -5,46 +5,33 @@ using Microsoft.Extensions.Logging;
 
 namespace AsyncSocket;
 
-public class ClientSession
+public class ClientSession(
+    ILogger<ClientSession>? logger,
+    Guid id,
+    Socket socket,
+    IMessageFraming messageFraming,
+    int bufferSize,
+    ISocketAsyncEventArgsPool argsPool)
 {
-    public Guid Id { get; }
-    private readonly ILogger<ClientSession>? _logger;
-    private readonly Socket _socket;
-    private readonly char _delimiter;
-    private readonly byte[] _receiveBuffer;
-    private readonly ISocketAsyncEventArgsPool _argsPool;
-    private readonly StringBuilder _stringBuffer;
+    public Guid Id { get; } = id;
+    private readonly byte[] _receiveBuffer = new byte[bufferSize];
     private CancellationTokenSource Cts { get; set; } = new();
 
     private bool IsRunning { get; set; }
 
-    private readonly int _maxBufferSizeWithoutDelimiter;
 
     public event EventHandler<string> MessageReceived = delegate { };
     public event EventHandler<Guid> Disconnected = delegate { };
 
-    public ClientSession(Guid id, Socket socket, char delimiter, int bufferSize, ISocketAsyncEventArgsPool argsPool)
-    :this(null, id, socket, delimiter,bufferSize,argsPool)
+    public ClientSession(Guid id, Socket socket, IMessageFraming messageFraming, int bufferSize, ISocketAsyncEventArgsPool argsPool)
+    :this(null, id, socket, messageFraming, bufferSize, argsPool)
     {
-        
-    }
-
-    public ClientSession(ILogger<ClientSession>? logger, Guid id, Socket socket, char delimiter, int bufferSize, ISocketAsyncEventArgsPool argsPool)
-    {
-        Id = id;
-        _socket = socket;
-        _delimiter = delimiter;
-        _receiveBuffer = new byte[bufferSize];
-        _argsPool = argsPool;
-        _maxBufferSizeWithoutDelimiter = bufferSize; // Max size allowed without finding a delimiter
-        _stringBuffer = new();
-        _logger = logger;
     }
 
     public async Task StartAsync(CancellationToken cancellationToken)
     {
         IsRunning = true;
-        _logger?.LogDebug("Client StartAsync {Id}: {isRunning}", Id, IsRunning);
+        logger?.LogDebug("Client StartAsync {Id}: {isRunning}", Id, IsRunning);
         
         Cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         Cts.Token.Register(() => _ = StopAsync());
@@ -55,12 +42,12 @@ public class ClientSession
         }
         catch (OperationCanceledException e)
         {
-            _logger?.LogDebug("Operation Canceled {Id}: {exception}", Id, e);
+            logger?.LogDebug("Operation Canceled {Id}: {exception}", Id, e);
             // Expected when cancellation is requested
         }
         catch (Exception ex)
         {
-            _logger?.LogDebug("Error in client {Id}: {exception}", Id, ex);
+            logger?.LogDebug("Error in client {Id}: {exception}", Id, ex);
         }
         finally
         {
@@ -72,7 +59,7 @@ public class ClientSession
     {
         if (!IsRunning)
         {
-            _logger?.LogDebug("StopAsync non running client {Id}: {isRunning}", Id, IsRunning);
+            logger?.LogDebug("StopAsync non running client {Id}: {isRunning}", Id, IsRunning);
             return;
         }
             
@@ -81,15 +68,15 @@ public class ClientSession
 
         try
         {
-            await _socket.DisconnectAsync(true);
-            _socket.Shutdown(SocketShutdown.Both);
+            await socket.DisconnectAsync(true);
+            socket.Shutdown(SocketShutdown.Both);
         }
         catch (Exception e)
         {
-            _logger?.LogDebug("DisconnectAsync and shutdown {e}", e);
+            logger?.LogDebug("DisconnectAsync and shutdown {e}", e);
         }
-        _socket.Close();
-        _socket.Dispose();
+        socket.Close();
+        socket.Dispose();
             
         Disconnected.Invoke(this, Id);
             
@@ -98,7 +85,7 @@ public class ClientSession
 
     private async Task ReceiveLoopAsync(CancellationToken cancellationToken)
     {
-        var args = _argsPool.Get();
+        var args = argsPool.Get();
         args.SetBuffer(_receiveBuffer, 0, _receiveBuffer.Length);
             
         try
@@ -110,10 +97,10 @@ public class ClientSession
                 args.UserToken = tcs;
                 args.Completed += OnReceiveCompleted;
                     
-                bool isPending = _socket.ReceiveAsync(args);
+                bool isPending = socket.ReceiveAsync(args);
                 if (!isPending)
                 {
-                    OnReceiveCompleted(_socket, args);
+                    OnReceiveCompleted(socket, args);
                 }
                     
                 int bytesRead = await tcs.Task;
@@ -122,15 +109,12 @@ public class ClientSession
                     // Connection closed gracefully
                     break;
                 }
-                    
-                string receivedText = Encoding.UTF8.GetString(_receiveBuffer, 0, bytesRead);
-                _stringBuffer.Append(receivedText);
-                    
-                // Check if buffer exceeds limit without finding a delimiter
-                if (_stringBuffer.Length > _maxBufferSizeWithoutDelimiter && 
-                    _stringBuffer.ToString().IndexOf(_delimiter) == -1)
+
+                bool processSucceed = messageFraming.Process(_receiveBuffer, bytesRead);
+                // Check if buffer exceeds limit without finding a framing delimiter
+                if (!processSucceed)
                 {
-                    _logger?.LogDebug("Client {Id}: Buffer exceeded maximum size without delimiter. Disconnecting.", Id);
+                    logger?.LogDebug("Client {Id}: Buffer exceeded maximum size without delimiter. Disconnecting.", Id);
                     break;  // This will trigger StopAsync() in the finally block
                 }
                     
@@ -142,7 +126,7 @@ public class ClientSession
         finally
         {
             args.Completed -= OnReceiveCompleted;
-            _argsPool.Return(args);
+            argsPool.Return(args);
         }
     }
 
@@ -163,15 +147,9 @@ public class ClientSession
 
     private async Task ProcessDelimitedMessagesAsync()
     {
-        int delimiterPos;
-        while ((delimiterPos = _stringBuffer.ToString().IndexOf(_delimiter)) != -1)
+        string? message;
+        while ((message = messageFraming.Next()) != null) 
         {
-            // Extract the message up to the delimiter
-            string message = _stringBuffer.ToString(0, delimiterPos + 1);
-                
-            // Remove the processed message and delimiter from the buffer
-            _stringBuffer.Remove(0, delimiterPos + 1);
-                
             // Raise event with the message
             MessageReceived.Invoke(this, message);
                 
@@ -185,7 +163,7 @@ public class ClientSession
         ClientException.ThrowIf(!IsRunning, "not running");
             
         byte[] data = Encoding.UTF8.GetBytes(message);
-        var args = _argsPool.Get();
+        var args = argsPool.Get();
         args.SetBuffer(data, 0, data.Length);
             
         try
@@ -194,10 +172,10 @@ public class ClientSession
             args.Completed += OnSendCompleted;
             args.UserToken = tcs;
                 
-            bool isPending = _socket.SendAsync(args);
+            bool isPending = socket.SendAsync(args);
             if (!isPending)
             {
-                OnSendCompleted(_socket, args);
+                OnSendCompleted(socket, args);
             }
                 
             await tcs.Task;
@@ -205,7 +183,7 @@ public class ClientSession
         finally
         {
             args.Completed -= OnSendCompleted;
-            _argsPool.Return(args);
+            argsPool.Return(args);
         }
     }
 

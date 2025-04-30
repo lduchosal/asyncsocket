@@ -36,5 +36,4 @@ public class AsyncTcpServer : AsyncServer
         string response = $"Server received: {message}";
         await client.SendAsync(response);
     }
-
 }

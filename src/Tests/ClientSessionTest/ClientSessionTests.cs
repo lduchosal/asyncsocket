@@ -10,6 +10,7 @@ namespace Tests.ClientSessionTest;
 public class ClientSessionTests
 {
     private const int BufferSize = 1024;
+    private const int MaxSiteWithoutADelimiter = 1024;
     private const char Delimiter = '\n';
     private Socket _serverSocket;
     private Socket _clientSocket;
@@ -33,9 +34,12 @@ public class ClientSessionTests
             
         // Initialize args pool
         _argsPool = new SocketAsyncEventArgsPool(10);
-            
+        
+        // Initialize framing
+        var framing = new CharDelimiterFraming(null, Delimiter, MaxSiteWithoutADelimiter);
+
         // Create client session
-        _clientSession = new ClientSession(Guid.NewGuid(), acceptedSocket, Delimiter, BufferSize, _argsPool);
+        _clientSession = new ClientSession(null, Guid.NewGuid(), acceptedSocket, framing, BufferSize, _argsPool);
     }
 
     [TestCleanup]
