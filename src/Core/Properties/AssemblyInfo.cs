@@ -1,5 +1,5 @@
-// <copyright file="AssemblyInfo.cs" company="IPNetwork">
-// Copyright (c) IPNetwork. All rights reserved.
+// <copyright file="AssemblyInfo.cs" company="asyncsocket">
+// Copyright (c) asyncsocket. All rights reserved.
 // </copyright>
 
 using System;

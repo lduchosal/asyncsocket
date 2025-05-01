@@ -7,15 +7,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="da6e33fb-0b4c-4a70-816e-9b9fdf55be0f" name="Changes" comment="Chore: simplify, remove unneeded">
-      <change afterPath="$PROJECT_DIR$/Core/Framing/LengthPrefixFraming.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Tests/FramingTest/LengthPrefixFramingTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.AsyncSocket/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.AsyncSocket/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/Framing/CharDelimiterFramingFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Framing/CharDelimiterFramingFactory.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EchoServer/AsyncEchoServer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/EchoServer/AsyncEchoServer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EchoServer/EchoService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/EchoServer/EchoService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EchoServer/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/EchoServer/Program.cs" afterDir="false" />
-    </list>
+    <list default="true" id="da6e33fb-0b4c-4a70-816e-9b9fdf55be0f" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -68,6 +60,9 @@
     <setting file="mock:///Users/q/Projects/asyncsocket/src/EchoServer/AsyncEchoServer.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Users/q/Projects/asyncsocket/src/EchoServer/AsyncEchoServer.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Users/q/Projects/asyncsocket/src/EchoServer/AsyncEchoServer.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/q/Projects/asyncsocket/src/EchoServer/AsyncEchoServer.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/q/Projects/asyncsocket/src/EchoServer/AsyncEchoServer.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/q/Projects/asyncsocket/src/EchoServer/Program.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Users/q/Projects/asyncsocket/src/Tests/AsyncTcpServerTest/AsyncTcpServer.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Users/q/Projects/asyncsocket/src/Tests/AsyncTcpServerTest/AsyncTcpServer.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Users/q/Projects/asyncsocket/src/Tests/AsyncTcpServerTest/AsyncTcpServerConcurrencyTests.cs" root0="SKIP_HIGHLIGHTING" />
@@ -139,7 +134,7 @@
       <workItem from="1744916741661" duration="12990000" />
       <workItem from="1745130779533" duration="37758000" />
       <workItem from="1745755921763" duration="17719000" />
-      <workItem from="1745940485147" duration="18525000" />
+      <workItem from="1745940485147" duration="23585000" />
     </task>
     <task id="LOCAL-00001" summary="Feat: SocketAsyncEventArgsPool / Tests">
       <option name="closed" value="true" />
@@ -253,7 +248,23 @@
       <option name="project" value="LOCAL" />
       <updated>1746016195463</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="Chore: cleanup">
+      <option name="closed" value="true" />
+      <created>1746091100864</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1746091100864</updated>
+    </task>
+    <task id="LOCAL-00016" summary="Fixed: sonarcloud issues">
+      <option name="closed" value="true" />
+      <created>1746093139199</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1746093139199</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -278,7 +289,9 @@
     <MESSAGE value="Feat: make Framing Type agnostic" />
     <MESSAGE value="Fix: organisation and namespace" />
     <MESSAGE value="Chore: simplify, remove unneeded" />
-    <option name="LAST_COMMIT_MESSAGE" value="Chore: simplify, remove unneeded" />
+    <MESSAGE value="Chore: cleanup" />
+    <MESSAGE value="Fixed: sonarcloud issues" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed: sonarcloud issues" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -334,19 +347,6 @@
             </endOffsets>
           </properties>
           <option name="timeStamp" value="83" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Tests/FramingTest/LengthPrefixFramingTests.cs</url>
-          <line>531</line>
-          <properties documentPath="$PROJECT_DIR$/Tests/FramingTest/LengthPrefixFramingTests.cs" containingFunctionPresentation="Method 'Recovery_AfterInvalidMessage_CanContinueProcessing'">
-            <startOffsets>
-              <option value="17549" />
-            </startOffsets>
-            <endOffsets>
-              <option value="17575" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="86" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
