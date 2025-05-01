@@ -6,7 +6,10 @@ public interface IMessageFramingFactory<T>
 {
     public IMessageFraming<T> CreateFraming();
 }
-public class CharDelimiterFramingFactory(char delimiter = '\n', int maxSizeWithoutADelimiter = 1024, ILoggerFactory? loggerFactory = null) : IMessageFramingFactory<string>
+public class CharDelimiterFramingFactory(
+    char delimiter = '\n', 
+    int maxSizeWithoutADelimiter = 1024, 
+    ILoggerFactory? loggerFactory = null) : IMessageFramingFactory<string>
 {
     public IMessageFraming<string> CreateFraming()
     {

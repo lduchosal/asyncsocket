@@ -6,7 +6,7 @@ namespace EchoServer;
 public class AsyncEchoServer(
     ILogger<AsyncEchoServer>? logger,
     AsyncServerConfig config, 
-    IMessageFramingFactory<string> framingFactory, 
+    CharDelimiterFramingFactory framingFactory, 
     ILoggerFactory? loggerFactory) 
     : AsyncServer<string>(config, framingFactory, loggerFactory)
 {

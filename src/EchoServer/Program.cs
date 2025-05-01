@@ -9,16 +9,17 @@ using Microsoft.Extensions.Logging;
 var builder = Host.CreateDefaultBuilder(args); // or console app
 builder.ConfigureServices((context, services) =>
 {
+    var config = new AsyncServerConfig
+    {
+        IpAddress = "127.0.0.1",
+        Port = 7777,
+        ProtocolType = ProtocolType.Tcp
+    };
     services
         .AddScoped<LoggerFactory>()
-        .AddScoped<AsyncServer<string>, AsyncEchoServer>()
-        .AddScoped<IMessageFramingFactory<string>, CharDelimiterFramingFactory>()
-        .AddScoped<AsyncServerConfig>(_ => new AsyncServerConfig
-        {
-            IpAddress = "127.0.0.1", 
-            Port = 7777, 
-            ProtocolType = ProtocolType.Tcp
-        })
+        .AddScoped<AsyncEchoServer>()
+        .AddScoped<CharDelimiterFramingFactory>()
+        .AddScoped<AsyncServerConfig>(_ => config)
         .AddHostedService<EchoService>();
 });
 

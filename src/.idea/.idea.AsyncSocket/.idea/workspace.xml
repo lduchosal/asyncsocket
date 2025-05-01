@@ -7,18 +7,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="da6e33fb-0b4c-4a70-816e-9b9fdf55be0f" name="Changes" comment="Feat: standardize">
-      <change afterPath="$PROJECT_DIR$/Core/CharDelimiterFraming.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Core/IMessageFraming.cs" afterDir="false" />
+    <list default="true" id="da6e33fb-0b4c-4a70-816e-9b9fdf55be0f" name="Changes" comment="Chore: simplify, remove unneeded">
+      <change afterPath="$PROJECT_DIR$/Core/Framing/LengthPrefixFraming.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Tests/FramingTest/LengthPrefixFramingTests.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.AsyncSocket/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.AsyncSocket/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/AsyncServer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/AsyncServer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/ClientSession.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/ClientSession.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tests/AsyncTcpServerTest/AsyncTcpServer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Tests/AsyncTcpServerTest/AsyncTcpServer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tests/ClientSessionTest/ClientSessionConcurrencyTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Tests/ClientSessionTest/ClientSessionConcurrencyTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tests/ClientSessionTest/ClientSessionExceptionTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Tests/ClientSessionTest/ClientSessionExceptionTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tests/ClientSessionTest/ClientSessionScalabilityTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Tests/ClientSessionTest/ClientSessionScalabilityTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tests/ClientSessionTest/ClientSessionStressTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Tests/ClientSessionTest/ClientSessionStressTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tests/ClientSessionTest/ClientSessionTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Tests/ClientSessionTest/ClientSessionTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/Framing/CharDelimiterFramingFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Core/Framing/CharDelimiterFramingFactory.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EchoServer/AsyncEchoServer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/EchoServer/AsyncEchoServer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EchoServer/EchoService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/EchoServer/EchoService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EchoServer/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/EchoServer/Program.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,6 +40,7 @@
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/4f00755995c0480f920a4c2a5db55d5f11b28/21/90e0c214/Host.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/4f00755995c0480f920a4c2a5db55d5f11b28/9e/a691a934/HostingHostBuilderExtensions.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/502bb580f1844bd9a57c7182b3d3890f17198/16/fbc7f3c2/Assert.cs" root0="SKIP_HIGHLIGHTING" />
@@ -64,8 +61,17 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/ccdf52e13a7748cb81d6f3e165ce13824c600/de/4be353e4/ConcurrentStack`1.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/24dd1164ba47541cb1d3eb011e638e16953dbea3ae3f4dc208c3bbf3e96298a/ServiceCollectionServiceExtensions.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/df3a5d166359f3be77c6a4c18d8b451173aecfe3a6673cbe1545fdc424a40/Assert.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/q/Projects/asyncsocket/src/Core/AsyncServer.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/q/Projects/asyncsocket/src/Core/AsyncServer.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/q/Projects/asyncsocket/src/Core/CharDelimiterFraming.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/q/Projects/asyncsocket/src/EchoServer/AsyncEchoServer.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/q/Projects/asyncsocket/src/EchoServer/AsyncEchoServer.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/q/Projects/asyncsocket/src/EchoServer/AsyncEchoServer.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/q/Projects/asyncsocket/src/EchoServer/AsyncEchoServer.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/q/Projects/asyncsocket/src/Tests/AsyncTcpServerTest/AsyncTcpServer.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Users/q/Projects/asyncsocket/src/Tests/AsyncTcpServerTest/AsyncTcpServer.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Users/q/Projects/asyncsocket/src/Tests/AsyncTcpServerTest/AsyncTcpServerConcurrencyTests.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/q/Projects/asyncsocket/src/Tests/ClientSessionTest/ClientSessionStressTests.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProjectColorInfo">{
@@ -81,7 +87,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    ".NET Project.EchoServer.executor": "Run",
+    ".NET Project.EchoServer.executor": "Debug",
     "ASKED_ADD_EXTERNAL_FILES": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "d854a2dc-720d-4b1f-82a1-9ef6dad74278.executor": "Debug",
@@ -133,7 +139,7 @@
       <workItem from="1744916741661" duration="12990000" />
       <workItem from="1745130779533" duration="37758000" />
       <workItem from="1745755921763" duration="17719000" />
-      <workItem from="1745940485147" duration="10880000" />
+      <workItem from="1745940485147" duration="18525000" />
     </task>
     <task id="LOCAL-00001" summary="Feat: SocketAsyncEventArgsPool / Tests">
       <option name="closed" value="true" />
@@ -199,7 +205,55 @@
       <option name="project" value="LOCAL" />
       <updated>1745991492375</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Refactoring: extract MessageFramiing">
+      <option name="closed" value="true" />
+      <created>1746012214779</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1746012214779</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Chore: test unit the charDelimiter">
+      <option name="closed" value="true" />
+      <created>1746013020640</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1746013020640</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Feat: extract MessageFraming">
+      <option name="closed" value="true" />
+      <created>1746014850458</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1746014850458</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Feat: make Framing Type agnostic">
+      <option name="closed" value="true" />
+      <created>1746015395299</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1746015395299</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Fix: organisation and namespace">
+      <option name="closed" value="true" />
+      <created>1746015704929</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1746015704929</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Chore: simplify, remove unneeded">
+      <option name="closed" value="true" />
+      <created>1746016195463</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1746016195463</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -218,49 +272,81 @@
     <MESSAGE value="Chore: cleanup and refactor" />
     <MESSAGE value="Fix: unit test" />
     <MESSAGE value="Feat: standardize" />
-    <option name="LAST_COMMIT_MESSAGE" value="Feat: standardize" />
+    <MESSAGE value="Refactoring: extract MessageFramiing" />
+    <MESSAGE value="Chore: test unit the charDelimiter" />
+    <MESSAGE value="Feat: extract MessageFraming" />
+    <MESSAGE value="Feat: make Framing Type agnostic" />
+    <MESSAGE value="Fix: organisation and namespace" />
+    <MESSAGE value="Chore: simplify, remove unneeded" />
+    <option name="LAST_COMMIT_MESSAGE" value="Chore: simplify, remove unneeded" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/Tests/AsyncTcpServerTest/AsyncTcpServerConcurrencyTests.cs</url>
-          <line>44</line>
+          <line>46</line>
           <properties documentPath="$PROJECT_DIR$/Tests/AsyncTcpServerTest/AsyncTcpServerConcurrencyTests.cs" containingFunctionPresentation="Lambda expression inside Method 'HandlesConcurrentConnections_WithinMaxConnections'">
             <startOffsets>
-              <option value="1226" />
+              <option value="1333" />
             </startOffsets>
             <endOffsets>
-              <option value="1280" />
+              <option value="1387" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="76" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Core/CharDelimiterFraming.cs</url>
-          <line>11</line>
-          <properties documentPath="$PROJECT_DIR$/Core/CharDelimiterFraming.cs" containingFunctionPresentation="Method 'Process'">
-            <startOffsets>
-              <option value="353" />
-            </startOffsets>
-            <endOffsets>
-              <option value="428" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="78" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Core/CharDelimiterFraming.cs</url>
-          <line>25</line>
+          <url>file://$PROJECT_DIR$/Core/Framing/CharDelimiterFraming.cs</url>
+          <line>40</line>
           <properties documentPath="$PROJECT_DIR$/Core/CharDelimiterFraming.cs" containingFunctionPresentation="Method 'Next'">
             <startOffsets>
-              <option value="796" />
+              <option value="1334" />
             </startOffsets>
             <endOffsets>
-              <option value="859" />
+              <option value="1346" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="79" />
+          <option name="timeStamp" value="81" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Core/Framing/CharDelimiterFraming.cs</url>
+          <line>49</line>
+          <properties documentPath="$PROJECT_DIR$/Core/CharDelimiterFraming.cs" containingFunctionPresentation="Method 'Next'">
+            <startOffsets>
+              <option value="1640" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1655" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="82" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Tests/ClientSessionTest/ClientSessionStressTests.cs</url>
+          <line>525</line>
+          <properties documentPath="$PROJECT_DIR$/Tests/ClientSessionTest/ClientSessionStressTests.cs" containingFunctionPresentation="Method 'CreateClientSessionPairAsync'">
+            <startOffsets>
+              <option value="21244" />
+            </startOffsets>
+            <endOffsets>
+              <option value="21294" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="83" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Tests/FramingTest/LengthPrefixFramingTests.cs</url>
+          <line>531</line>
+          <properties documentPath="$PROJECT_DIR$/Tests/FramingTest/LengthPrefixFramingTests.cs" containingFunctionPresentation="Method 'Recovery_AfterInvalidMessage_CanContinueProcessing'">
+            <startOffsets>
+              <option value="17549" />
+            </startOffsets>
+            <endOffsets>
+              <option value="17575" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="86" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
