@@ -29,7 +29,11 @@ public class LengthPrefixFraming : IMessageFraming<byte[]>
     public bool Process(byte[] receiveBuffer, int bytesRead)
     {
 
-        
+        if (Failed)
+        {
+            Logger?.LogDebug("Invalid message has been received earlier, execution cannot continue");
+            throw new InvalidOperationException($"Invalid message has been received earlier, execution cannot continue.");
+        }
         
         // Resize buffer to accommodate new data
         int newSize = _bufferPosition + bytesRead;

@@ -37,16 +37,25 @@ namespace Tests.ClientSessionTest
         {
             // Arrange
             var (session, clientSocket, sessionTask) = await CreateClientSessionPairAsync();
-            
-            // Act
-            await session.StopAsync(); // First call
-            await session.StopAsync(); // Second call should not throw
-            await session.StopAsync(); // Third call should not throw
-            
-            // Assert - if we got here without exceptions, the test passes
-            
-            // Clean up
-            clientSocket.Close();
+            bool passed = true;
+
+            try
+            {
+                // Act
+                await session.StopAsync(); // First call
+                await session.StopAsync(); // Second call should not throw
+                await session.StopAsync(); // Third call should not throw
+
+                // Assert - if we got here without exceptions, the test passes
+
+                // Clean up
+                clientSocket.Close();
+            }
+            catch (Exception e)
+            {
+                passed = false;
+            }
+            Assert.IsTrue(passed);
         }
 
         [TestMethod]

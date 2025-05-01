@@ -30,40 +30,48 @@ public class SocketAsyncEventArgsPoolStressTests
         using var pool = new SocketAsyncEventArgsPool();
         var tasks = new List<Task>();
         var allArgs = new List<SocketAsyncEventArgs>[numThreads];
-            
-        for (int i = 0; i < numThreads; i++)
+        bool exception = false;
+        try
         {
-            allArgs[i] = new List<SocketAsyncEventArgs>();
-            int threadId = i;
-                
-            // Act - Each task gets and returns objects from the pool
-            tasks.Add(Task.Run(() =>
+            for (int i = 0; i < numThreads; i++)
             {
-                for (int j = 0; j < operationsPerThread; j++)
+                allArgs[i] = new List<SocketAsyncEventArgs>();
+                int threadId = i;
+
+                // Act - Each task gets and returns objects from the pool
+                tasks.Add(Task.Run(() =>
                 {
-                    var args = pool.Get();
-                    allArgs[threadId].Add(args);
-                        
-                    // Simulate some work
-                    if (j % 2 == 0)
+                    for (int j = 0; j < operationsPerThread; j++)
+                    {
+                        var args = pool.Get();
+                        allArgs[threadId].Add(args);
+
+                        // Simulate some work
+                        if (j % 2 == 0)
+                        {
+                            pool.Return(args);
+                        }
+                    }
+
+                    // Return remaining args
+                    foreach (var args in allArgs[threadId])
                     {
                         pool.Return(args);
                     }
-                }
-                    
-                // Return remaining args
-                foreach (var args in allArgs[threadId])
-                {
-                    pool.Return(args);
-                }
-            }));
+                }));
+            }
+
+            await Task.WhenAll(tasks);
+
         }
-            
-        await Task.WhenAll(tasks);
-            
+        catch (Exception e)
+        {
+            exception = true;
+        }
         // Assert
         // We can't easily make specific assertions about the pool's internal state,
         // but we can verify no exceptions were thrown
+        Assert.IsFalse(exception);
     }
         
     [DataTestMethod]

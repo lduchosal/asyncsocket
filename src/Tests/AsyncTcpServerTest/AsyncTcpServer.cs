@@ -24,7 +24,7 @@ public class AsyncTcpServer(
     }
     protected override async Task HandleMessageAsync(ClientSession<string> client, string message)
     {
-        Logger?.LogDebug($"Received from {client.Id}: {message}");
+        Logger?.LogDebug("Received from {Id}: {message}", client.Id, message);
         // Echo the message back with the delimiter
         string response = $"Server received: {message}";
         await client.SendAsync(response);

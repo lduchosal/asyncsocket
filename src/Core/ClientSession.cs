@@ -43,12 +43,12 @@ public class ClientSession<T>(
         }
         catch (OperationCanceledException e)
         {
-            logger?.LogDebug("Operation Canceled {Id}: {exception}", Id, e);
+            logger?.LogDebug(e, "Operation Canceled {Id}", Id);
             // Expected when cancellation is requested
         }
         catch (Exception ex)
         {
-            logger?.LogDebug("Error in client {Id}: {exception}", Id, ex);
+            logger?.LogDebug(ex, "Error in client {Id}", Id);
         }
         finally
         {
@@ -74,7 +74,7 @@ public class ClientSession<T>(
         }
         catch (Exception e)
         {
-            logger?.LogDebug("DisconnectAsync and shutdown {e}", e);
+            logger?.LogDebug(e, "DisconnectAsync and shutdown");
         }
         socket.Close();
         socket.Dispose();
@@ -131,9 +131,9 @@ public class ClientSession<T>(
         }
     }
 
-    private void OnReceiveCompleted(object? sender, SocketAsyncEventArgs e)
+    private static void OnReceiveCompleted(object? sender, SocketAsyncEventArgs e)
     {
-        ArgumentNullException.ThrowIfNull(e.UserToken, nameof(e.UserToken));
+        ArgumentNullException.ThrowIfNull(e.UserToken);
         
         var tcs = (TaskCompletionSource<int>)e.UserToken;
         if (e.SocketError == SocketError.Success)
@@ -148,8 +148,7 @@ public class ClientSession<T>(
 
     private async Task ProcessDelimitedMessagesAsync()
     {
-        T? message;
-        while ((message = messageFraming.Next()) != null) 
+        while (messageFraming.Next() is { } message) 
         {
             // Raise event with the message
             MessageReceived.Invoke(this, message);
@@ -190,7 +189,7 @@ public class ClientSession<T>(
 
     private void OnSendCompleted(object? _, SocketAsyncEventArgs e)
     {
-        ArgumentNullException.ThrowIfNull(e.UserToken, nameof(e.UserToken));
+        ArgumentNullException.ThrowIfNull(e.UserToken);
         
         var tcs = (TaskCompletionSource<bool>)e.UserToken;
             

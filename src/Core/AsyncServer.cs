@@ -20,7 +20,7 @@ public abstract class AsyncServer<T> : IAsyncDisposable
     private readonly int _maxConnection;
     private readonly int _bufferSize;
 
-    public AsyncServer(AsyncServerConfig config, IMessageFramingFactory<T> framingFactory, ILoggerFactory? loggerFactory = null)
+    protected AsyncServer(AsyncServerConfig config, IMessageFramingFactory<T> framingFactory, ILoggerFactory? loggerFactory = null)
     {
         _maxConnection = config.MaxConnections;
         _bufferSize = config.BufferSize;
@@ -70,13 +70,13 @@ public abstract class AsyncServer<T> : IAsyncDisposable
         }
         catch (Exception ex)
         {
-            _logger?.LogDebug("Error in server: {ex}", ex);
+            _logger?.LogDebug(ex, "Error in server");
         }
     }
-    
-    void OnAcceptArgsOnCompleted(object? s, SocketAsyncEventArgs e)
+
+    private static void OnAcceptArgsOnCompleted(object? s, SocketAsyncEventArgs e)
     {
-        ArgumentNullException.ThrowIfNull(e.UserToken, nameof(e.UserToken));
+        ArgumentNullException.ThrowIfNull(e.UserToken);
         
         var tcs = (TaskCompletionSource<Socket>)e.UserToken;
         if (e.SocketError == SocketError.Success
@@ -124,7 +124,7 @@ public abstract class AsyncServer<T> : IAsyncDisposable
         }
         catch (Exception ex)
         {
-            _logger?.LogDebug("Error accepting client: {ex}", ex);
+            _logger?.LogDebug(ex, "Error accepting client");
             _maxConnectionsSemaphore.Release();
         }
     }

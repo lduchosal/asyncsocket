@@ -31,19 +31,28 @@ public class SocketAsyncEventArgsPool : ISocketAsyncEventArgsPool, IDisposable
     public void Return(SocketAsyncEventArgs item)
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
-        ArgumentNullException.ThrowIfNull(item, nameof(item));
+        ArgumentNullException.ThrowIfNull(item);
         
         _pool.Push(item);
     }
-
     public void Dispose()
     {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        // Cleanup
+        if (!disposing)
+        {
+            return;
+        }
         if (_disposed)
         {
             return;
         }
         _disposed = true;
-        
         while (_pool.TryPop(out var args))
         {
             args.Dispose();

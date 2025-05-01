@@ -501,15 +501,12 @@ public class LengthPrefixFramingTests
         Assert.IsFalse(invalidResult);
             
         // Process a valid message
-        var validBuffer = new byte[] { 0, 0, 0, 2, 42, 43 };
-        var validResult = framing.Process(validBuffer, validBuffer.Length);
-        Assert.IsTrue(validResult);
-            
         // Act
-        var message = framing.Next();
-            
-        // Assert
-        Assert.IsNull(message);
+        var validBuffer = new byte[] { 0, 0, 0, 2, 42, 43 };
+        Assert.ThrowsException<InvalidOperationException>(() =>
+        {
+            var validResult = framing.Process(validBuffer, validBuffer.Length);
+        });
     }
 
     [TestMethod]

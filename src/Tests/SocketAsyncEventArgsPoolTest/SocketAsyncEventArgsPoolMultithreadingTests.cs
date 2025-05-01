@@ -301,10 +301,10 @@ public class SocketAsyncEventArgsPoolMultithreadingTests
                     // Add some randomness
                     if (j % 10 == 0)
                     {
-                        Thread.Sleep(1);
+                        Task.Delay(1);
                     }
                 }
-            });
+            }, cancellationTokenSource.Token);
         }
             
         // Consumers take items and return to pool
@@ -410,15 +410,15 @@ public class SocketAsyncEventArgsPoolMultithreadingTests
         // Wait for all get threads to start
         while (getThreadsStarted < getThreads)
         {
-            Thread.Sleep(10);
+            Task.Delay(10);
         }
             
         // Wait for all threads to be at the barrier
         barrier.SignalAndWait();
             
         // Let threads run for a bit
-        Thread.Sleep(100);
-            
+        Task.Delay(100);
+
         // Dispose the pool while threads are getting items
         disposeCalled = true;
         pool.Dispose();

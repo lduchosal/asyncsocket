@@ -22,8 +22,8 @@ public class AsyncEchoServer(
     }
     protected override async Task HandleMessageAsync(ClientSession<string> client, string message)
     {
-        logger?.LogDebug($"Received from {client.Id}: {message}");
-        
+        logger?.LogDebug("Received from {Id}: {message}", client.Id, message);
+
         if (message == "quit\n")
         {
             await client.SendAsync("ciao\n");
