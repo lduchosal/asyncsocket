@@ -55,7 +55,7 @@ public class SocketAsyncEventArgsPoolLeakTests
         Assert.IsTrue(leakPercentage < 0.05, $"Expected less than 5% leakage, but found {leakPercentage:P2} ({remainingAlive} objects)");
     }
         
-    private async Task RunPoolOperations(
+    private static async Task RunPoolOperations(
         SocketAsyncEventArgsPool pool,
         int totalOperations,
         int concurrentThreads,
