@@ -89,7 +89,7 @@ public class SocketAsyncEventArgsPoolMultithreadingTests
             {
                 // Each thread maintains its own collection of items
                 var threadItems = new List<SocketAsyncEventArgs>();
-                var random = new Random(Thread.CurrentThread.ManagedThreadId);
+                var random = new Random(Environment.CurrentManagedThreadId);
                     
                 for (int j = 0; j < iterations; j++)
                 {
@@ -447,7 +447,7 @@ public class SocketAsyncEventArgsPoolMultithreadingTests
     }
         
     // Helper method to run throughput test and collect metrics
-    private async Task<PerformanceMetrics> RunThroughputTest(
+    private static async Task<PerformanceMetrics> RunThroughputTest(
         SocketAsyncEventArgsPool pool, int threadCount, int operationsPerThread)
     {
         var tasks = new Task<ThreadMetrics>[threadCount];

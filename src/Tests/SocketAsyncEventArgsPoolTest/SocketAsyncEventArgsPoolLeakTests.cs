@@ -120,7 +120,7 @@ public class SocketAsyncEventArgsPoolLeakTests
         await Task.WhenAll(tasks);
     }
         
-    private void SimulateWork(SocketAsyncEventArgs args)
+    private static void SimulateWork(SocketAsyncEventArgs args)
     {
         // Set some properties or buffers to simulate real usage
         byte[] buffer = new byte[1024];

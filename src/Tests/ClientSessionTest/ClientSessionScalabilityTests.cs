@@ -559,7 +559,7 @@ public class ClientSessionScalabilityTests
     }
 
     // Helper method to use a session for random operations
-    private async Task UseSessionRandomlyAsync(ClientSession<string> session, Socket clientSocket, int operations)
+    private static async Task UseSessionRandomlyAsync(ClientSession<string> session, Socket clientSocket, int operations)
     {
         try
         {
@@ -597,7 +597,7 @@ public class ClientSessionScalabilityTests
     }
 
     // Helper method to receive messages until expected count
-    private async Task ReceiveAllAsync(Socket socket, int expectedMessages)
+    private static async Task ReceiveAllAsync(Socket socket, int expectedMessages)
     {
         var buffer = new byte[BufferSize * 2];
         int receivedCount = 0;

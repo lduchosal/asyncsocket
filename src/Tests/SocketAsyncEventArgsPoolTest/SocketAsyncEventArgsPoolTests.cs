@@ -17,7 +17,7 @@ public class SocketAsyncEventArgsPoolTests
             
         // Assert
         Assert.IsNotNull(args);
-        Assert.IsInstanceOfType(args, typeof(SocketAsyncEventArgs));
+        Assert.IsInstanceOfType<SocketAsyncEventArgs>(args);
     }
         
     [TestMethod]

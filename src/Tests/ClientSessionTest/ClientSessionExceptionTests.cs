@@ -80,7 +80,7 @@ namespace Tests.ClientSessionTest
         {
             // Arrange
             var localCts = new CancellationTokenSource();
-            var (session, clientSocket, sessionTask) = await CreateClientSessionPairAsync(localCts.Token);
+            var (session, clientSocket, sessionTask) = await CreateClientSessionPairAsync(cancellationToken: localCts.Token);
             
             bool disconnectEventRaised = false;
             session.Disconnected += (sender, id) =>
@@ -121,7 +121,7 @@ namespace Tests.ClientSessionTest
         {
             // Arrange
             var localCts = new CancellationTokenSource();
-            var (session, clientSocket, sessionTask) = await CreateClientSessionPairAsync(localCts.Token);
+            var (session, clientSocket, sessionTask) = await CreateClientSessionPairAsync(cancellationToken: localCts.Token);
             
             bool disconnectEventRaised = false;
             session.Disconnected += (sender, id) =>
@@ -203,7 +203,7 @@ namespace Tests.ClientSessionTest
         {
             // Arrange
             ISocketAsyncEventArgsPool smallPool = new ExceptionSocketAsyncEventArgsPool(); // Pool will thorw exception
-            var (session, clientSocket, sessionTask) = await CreateClientSessionPairAsync(token: Cts.Token, pool: smallPool);
+            var (session, clientSocket, sessionTask) = await CreateClientSessionPairAsync(cancellationToken: Cts.Token, pool: smallPool);
             
             try
             {
@@ -312,11 +312,11 @@ namespace Tests.ClientSessionTest
 
         // Helper method to create a client-server socket pair and client session
         private async Task<(ClientSession<string> session, Socket clientSocket, Task sessionTask)>
-            CreateClientSessionPairAsync(CancellationToken token = default, ISocketAsyncEventArgsPool? pool = null)
+            CreateClientSessionPairAsync(ISocketAsyncEventArgsPool? pool = null, CancellationToken cancellationToken = default)
         {
                         
             // Use the provided token or default to the one from the test fixture
-            var tokenToUse = token == default ? Cts.Token : token;
+            var tokenToUse = cancellationToken == default ? Cts.Token : cancellationToken;
 
             // Use the provided pool or default to the one from the test fixture
             var poolToUse = pool ?? ArgsPool;

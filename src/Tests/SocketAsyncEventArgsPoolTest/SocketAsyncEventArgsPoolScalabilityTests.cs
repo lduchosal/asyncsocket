@@ -160,7 +160,7 @@ public class SocketAsyncEventArgsPoolScalabilityTests
             items.TryPeek(out var args);
             Debug.Assert(args != null, "args != null");
 
-            items.TakeLast(1);
+            _ = items.TakeLast(1);
             var sw = Stopwatch.StartNew();
             pool.Return(args);
             sw.Stop();
@@ -391,7 +391,7 @@ public class SocketAsyncEventArgsPoolScalabilityTests
     }
         
     // Helper method to run concurrent operations
-    private async Task RunConcurrentOperations(int threadCount, int opsPerThread, 
+    private static async Task RunConcurrentOperations(int threadCount, int opsPerThread, 
         Func<SocketAsyncEventArgs?> operation, ConcurrentBag<SocketAsyncEventArgs?> collector)
     {
         var tasks = new Task[threadCount];
@@ -429,7 +429,7 @@ public class SocketAsyncEventArgsPoolScalabilityTests
     }
         
     // Helper method to measure baseline operation times
-    private OperationMetrics MeasureOperationTime(SocketAsyncEventArgsPool pool, int operations)
+    private static OperationMetrics MeasureOperationTime(SocketAsyncEventArgsPool pool, int operations)
     {
         var getTimes = new List<double>();
         var returnTimes = new List<double>();

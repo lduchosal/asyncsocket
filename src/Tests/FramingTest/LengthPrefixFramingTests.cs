@@ -460,7 +460,7 @@ public class LengthPrefixFramingTests
     }
 
     // Helper method to create a message with header and payload
-    private byte[] CreateMessage(int payloadSize, int identifier)
+    private static byte[] CreateMessage(int payloadSize, int identifier)
     {
         var message = new byte[4 + payloadSize];
         // Set header (big-endian)
