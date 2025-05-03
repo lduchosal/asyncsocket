@@ -32,8 +32,7 @@ public class ClientSessionScalabilityTests
     }
 
     [TestMethod]
-    [TestCategory("FailOnGitHub")]
-    [Ignore]
+    [Ignore("FailOnGitHub")]
     [Timeout(60000)] // 60 seconds timeout
     public async Task ScaleTest_MultipleClientSessions()
     {
@@ -271,8 +270,7 @@ public class ClientSessionScalabilityTests
     }
 
     [TestMethod]
-    [TestCategory("FailOnGitHub")]
-    [Ignore]
+    [Ignore("FailOnGitHub")]
     [Timeout(60000)] // 60 second timeout
     public async Task ScaleTest_ConnectionPoolUtilization()
     {
@@ -419,8 +417,7 @@ public class ClientSessionScalabilityTests
     }
 
     [TestMethod]
-    [TestCategory("FailOnGitHub")]
-    [Ignore]
+    [Ignore("FailOnGitHub")]
     [Timeout(30000)] // 30 second timeout
     public async Task ScaleTest_ResourceReclamation()
     {

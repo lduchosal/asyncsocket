@@ -87,7 +87,7 @@ public class ClientSession<T>(
 
     private async Task ReceiveLoopAsync(CancellationToken cancellationToken)
     {
-        Debug.Assert(argsPool != null, nameof(argsPool) + " != null");
+        Debug.Assert(argsPool != null, "argsPool != null");
         var args = argsPool.Get();
         args.SetBuffer(_receiveBuffer, 0, _receiveBuffer.Length);
             
@@ -113,7 +113,7 @@ public class ClientSession<T>(
                     break;
                 }
 
-                Debug.Assert(messageFraming != null, nameof(messageFraming) + " != null");
+                Debug.Assert(messageFraming != null, "messageFraming != null");
                 bool processSucceed = messageFraming.Process(_receiveBuffer, bytesRead);
                 // Check if buffer exceeds limit without finding a framing delimiter
                 if (!processSucceed)
@@ -166,7 +166,7 @@ public class ClientSession<T>(
         ClientException.ThrowIf(!IsRunning, "not running");
             
         byte[] data = Encoding.UTF8.GetBytes(message);
-        Debug.Assert(argsPool != null, nameof(argsPool) + " != null");
+        Debug.Assert(argsPool != null, "argsPool != null");
         var args = argsPool.Get();
         args.SetBuffer(data, 0, data.Length);
             
@@ -191,7 +191,7 @@ public class ClientSession<T>(
         }
     }
 
-    private void OnSendCompleted(object? _, SocketAsyncEventArgs e)
+    private static void OnSendCompleted(object? _, SocketAsyncEventArgs e)
     {
         ArgumentNullException.ThrowIfNull(e.UserToken);
         

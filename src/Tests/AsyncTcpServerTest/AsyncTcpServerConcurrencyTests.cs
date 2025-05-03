@@ -60,7 +60,7 @@ public class AsyncTcpServerConcurrencyTests
 
                 // Read response
                 byte[] buffer = new byte[1024];
-                int bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length);
+                int bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length, cts.Token);
                 string response = Encoding.UTF8.GetString(buffer, 0, bytesRead);
 
                 Assert.IsTrue(response.Contains(message));
@@ -148,8 +148,7 @@ public class AsyncTcpServerConcurrencyTests
     }
 
     [TestMethod]
-    [TestCategory("FailOnGitHub")]
-    [Ignore]
+    [Ignore("FailOnGitHub")]
     public async Task ServerDispose_ClosesAllClientConnections()
     {
         // Arrange
@@ -241,7 +240,7 @@ public class AsyncTcpServerConcurrencyTests
                 await stream.WriteAsync(data, 0, data.Length);
 
                 byte[] buffer = new byte[1024];
-                int bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length);
+                int bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length, cts.Token);
                 string response = Encoding.UTF8.GetString(buffer, 0, bytesRead);
 
                 lock (messageLock)

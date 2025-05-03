@@ -174,8 +174,7 @@ public class SocketAsyncEventArgsPoolMultithreadingTests
     }
         
     [TestMethod]
-    [Ignore]
-    [TestCategory("FailOnGitHub")]
+    [Ignore("FailOnGitHub")]
     public void GetUnderHighContention_ShouldMaintainPerformance()
     {
         // Arrange

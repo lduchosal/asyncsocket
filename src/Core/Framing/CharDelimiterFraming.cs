@@ -24,7 +24,7 @@ public class CharDelimiterFraming : IMessageFraming<string>
         string receivedText = Encoding.UTF8.GetString(receiveBuffer, 0, bytesRead);
         _stringBuffer.Append(receivedText);
         if (_stringBuffer.Length > MaxSizeWithoutADelimiter && 
-            _stringBuffer.ToString().IndexOf(Delimiter) == -1)
+            !_stringBuffer.ToString().Contains(Delimiter))
         {
             Logger?.LogDebug("Buffer exceeded maximum size without delimiter.");
             return false;

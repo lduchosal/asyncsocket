@@ -75,8 +75,7 @@ namespace Tests.ClientSessionTest
         }
 
         [TestMethod]
-        [Ignore]
-        [TestCategory("FailOnGithub")]
+        [Ignore("FailOnGitHub")]
         public async Task CancellationToken_Afterreceived_TriggersGracefulShutdown()
         {
             // Arrange
@@ -117,8 +116,7 @@ namespace Tests.ClientSessionTest
         
         
         [TestMethod]
-        [TestCategory("FailOnGithub")]
-        [Ignore]
+        [Ignore("FailOnGitHub")]
         public async Task CancellationToken_BeforeReceived_TriggersGracefulShutdown()
         {
             // Arrange
@@ -153,8 +151,7 @@ namespace Tests.ClientSessionTest
         }
 
         [TestMethod]
-        [TestCategory("FailOnGitHub")]
-        [Ignore]
+        [Ignore("FailOnGitHub")]
         public async Task MessageTooLarge_DisconnectsClient()
         {
             // Arrange
@@ -314,7 +311,7 @@ namespace Tests.ClientSessionTest
         }
 
         // Helper method to create a client-server socket pair and client session
-        private async Task<(ClientSession<string> session, Socket clientSocket, Task sessionTask)> 
+        private async Task<(ClientSession<string> session, Socket clientSocket, Task sessionTask)>
             CreateClientSessionPairAsync(CancellationToken token = default, ISocketAsyncEventArgsPool? pool = null)
         {
                         

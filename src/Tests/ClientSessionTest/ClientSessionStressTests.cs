@@ -32,8 +32,7 @@ public class ClientSessionStressTests
     }
 
     [TestMethod]
-    [TestCategory("FailOnGitHub")]
-    [Ignore]
+    [Ignore("FailOnGitHub")]
     [Timeout(120000)] // 2 minute timeout
     public async Task StressTest_RapidConnectionCycles()
     {
@@ -141,8 +140,7 @@ public class ClientSessionStressTests
     }
 
     [TestMethod]
-    [TestCategory("FailOnGitHub")]
-    [Ignore]
+    [Ignore("FailOnGitHub")]
     [Timeout(120000)] // 2 minute timeout
     public async Task StressTest_LargeMessageVolume()
     {
@@ -395,8 +393,7 @@ public class ClientSessionStressTests
     }
 
     [TestMethod]
-    [TestCategory("FailOnGitHub")]
-    [Ignore]
+    [Ignore("FailOnGitHub")]
     [Timeout(120000)] // 2 minute timeout
     public async Task StressTest_MessageBoundaries()
     {
