@@ -33,6 +33,10 @@ public abstract class AsyncServer<T> : IAsyncDisposable
         _framingFactory = framingFactory;
     }
 
+    protected internal abstract Task HandleDisconnectedAsync(ClientSession<T> client);
+    protected internal abstract Task HandleMessageAsync(ClientSession<T> client, T message);
+    protected internal abstract Task HandleConnectedAsync(ClientSession<T> client);
+
     public async Task RunAsync(CancellationToken cancellationToken)
     {
         
@@ -129,10 +133,6 @@ public abstract class AsyncServer<T> : IAsyncDisposable
             _maxConnectionsSemaphore.Release();
         }
     }
-
-    protected abstract Task HandleDisconnectedAsync(ClientSession<T> client);
-    protected abstract Task HandleMessageAsync(ClientSession<T> client, T message);
-    protected abstract Task HandleConnectedAsync(ClientSession<T> client);
 
     public async ValueTask DisposeAsync()
     {

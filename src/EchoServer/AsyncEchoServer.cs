@@ -19,7 +19,7 @@ public class AsyncEchoServer(
     {
         logger?.LogDebug("Client Disconnected {clientId}", client.Id);
         return Task.CompletedTask;
-    }
+    } 
     protected override async Task HandleMessageAsync(ClientSession<string> client, string message)
     {
         logger?.LogDebug("Received from {Id}: {message}", client.Id, message);

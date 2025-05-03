@@ -12,17 +12,17 @@ public class AsyncTcpServer(
 {
     private readonly ILogger<AsyncTcpServer>? Logger = loggerFactory?.CreateLogger<AsyncTcpServer>();
 
-    protected override Task HandleConnectedAsync(ClientSession<string> client)
+    protected internal override Task HandleConnectedAsync(ClientSession<string> client)
     {
         Logger?.LogDebug("Client Connected {clientId}", client.Id);
         return Task.CompletedTask;
     }
-    protected override Task HandleDisconnectedAsync(ClientSession<string> client)
+    protected internal override Task HandleDisconnectedAsync(ClientSession<string> client)
     {
         Logger?.LogDebug("Client Disconnected {clientId}", client.Id);
         return Task.CompletedTask;
     }
-    protected override async Task HandleMessageAsync(ClientSession<string> client, string message)
+    protected internal override async Task HandleMessageAsync(ClientSession<string> client, string message)
     {
         Logger?.LogDebug("Received from {Id}: {message}", client.Id, message);
         // Echo the message back with the delimiter
