@@ -148,7 +148,7 @@ public abstract class AsyncServer<T> : IAsyncDisposable
         _clients.Clear();
 
         _maxConnectionsSemaphore.Dispose();
-        Debug.Assert(_argsPool != null, "argsPool != null");
+        Debug.Assert(_argsPool != null);
         _argsPool.Dispose();
 
         GC.SuppressFinalize(this);

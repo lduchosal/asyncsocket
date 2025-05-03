@@ -59,7 +59,7 @@ public class ClientSessionTests
         byte[] buffer = new byte[BufferSize];
 
         // Start the client session and wait for it to be ready
-        Debug.Assert(_clientSession != null, "clientSession != null");
+        Debug.Assert(_clientSession != null);
         var clientTask = _clientSession.StartAsync(_cts.Token);
     
         // Act
@@ -140,7 +140,7 @@ public class ClientSessionTests
         var receivedMessages = new List<string>();
         var allMessagesTcs = new TaskCompletionSource<bool>();
 
-        Debug.Assert(_clientSession != null, "ClientSession != null");
+        Debug.Assert(_clientSession != null);
         _clientSession.MessageReceived += (sender, message) => 
         {
             lock (receivedMessages)
@@ -180,7 +180,7 @@ public class ClientSessionTests
         var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
         _ = Task.Run(() =>
         {
-            Debug.Assert(_clientSession != null, "ClientSession != null");
+            Debug.Assert(_clientSession != null);
             return _clientSession.StartAsync(cts.Token);
         });
         
@@ -188,7 +188,7 @@ public class ClientSessionTests
         await Task.Delay(100);
         
         // Act - Stop the session
-        Debug.Assert(_clientSession != null, "ClientSession != null");
+        Debug.Assert(_clientSession != null);
         await _clientSession.StopAsync();
 
         await Assert.ThrowsExceptionAsync<ClientException>(async () =>
@@ -199,7 +199,7 @@ public class ClientSessionTests
         
         // Assert - The client socket should receive nothing
         byte[] buffer = new byte[BufferSize];
-        Debug.Assert(_clientSocket != null, "ClientSocket != null");
+        Debug.Assert(_clientSocket != null);
         _clientSocket.ReceiveTimeout = 1000; // 1 second timeout
         
         try
@@ -222,7 +222,7 @@ public class ClientSessionTests
         
         var disconnectedTcs = new TaskCompletionSource<Guid>();
 
-        Debug.Assert(_clientSession != null, "ClientSession != null");
+        Debug.Assert(_clientSession != null);
         _clientSession.Disconnected += (sender, id) => 
         {
             disconnectedTcs.SetResult(id);
@@ -236,7 +236,7 @@ public class ClientSessionTests
         await Task.Delay(100);
         
         // Act - Send the oversized message
-        Debug.Assert(_clientSocket != null, "ClientSocket != null");
+        Debug.Assert(_clientSocket != null);
         _clientSocket.Send(Encoding.UTF8.GetBytes(oversizedMessage));
         
         // Assert - Session should disconnect due to buffer overflow

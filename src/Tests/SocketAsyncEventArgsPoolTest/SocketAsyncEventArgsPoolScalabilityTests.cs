@@ -158,7 +158,7 @@ public class SocketAsyncEventArgsPoolScalabilityTests
         await RunConcurrentOperations(10, 100, () =>
         {
             items.TryPeek(out var args);
-            Debug.Assert(args != null, "args != null");
+            Debug.Assert(args != null);
 
             _ = items.TakeLast(1);
             var sw = Stopwatch.StartNew();

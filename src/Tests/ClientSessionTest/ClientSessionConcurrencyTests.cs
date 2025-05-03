@@ -100,7 +100,7 @@ namespace Tests.ClientSessionTest
         {
             // Arrange
             var receivedMessages = new ConcurrentBag<string>();
-            Debug.Assert(ClientSession != null, "ClientSession != null");
+            Debug.Assert(ClientSession != null);
             ClientSession.MessageReceived += (sender, message) =>
             {
                 receivedMessages.Add(message);
@@ -153,7 +153,7 @@ namespace Tests.ClientSessionTest
         public async Task ConcurrentSendsAndStopSession_ShouldHandleGracefully()
         {
             // Arrange
-            Debug.Assert(ClientSession != null, "ClientSession != null");
+            Debug.Assert(ClientSession != null);
             var sessionTask = ClientSession.StartAsync(_cts.Token);
             
             // Allow session to start
@@ -187,7 +187,7 @@ namespace Tests.ClientSessionTest
         {
             // Arrange
             var receivedMessages = new ConcurrentBag<string>();
-            Debug.Assert(ClientSession != null, "ClientSession != null");
+            Debug.Assert(ClientSession != null);
             ClientSession.MessageReceived += (sender, message) =>
             {
                 receivedMessages.Add(message);
@@ -199,7 +199,7 @@ namespace Tests.ClientSessionTest
             await Task.Delay(100);
             
             // ACT: Send partial messages that will need to be assembled
-            Debug.Assert(ClientSocket != null, "ClientSocket != null");
+            Debug.Assert(ClientSocket != null);
             await ClientSocket.SendAsync(Encoding.UTF8.GetBytes("First half of message"), SocketFlags.None);
             await Task.Delay(50); // Small delay to test buffering
             await ClientSocket.SendAsync(Encoding.UTF8.GetBytes($" and second half{Delimiter}"), SocketFlags.None);
@@ -243,7 +243,7 @@ namespace Tests.ClientSessionTest
             
             while (receivedCount < expectedMessageCount)
             {
-                Debug.Assert(socket != null, "socket != null");
+                Debug.Assert(socket != null);
                 int bytesRead = await socket.ReceiveAsync(buffer, SocketFlags.None);
                 
                 if (bytesRead == 0)
