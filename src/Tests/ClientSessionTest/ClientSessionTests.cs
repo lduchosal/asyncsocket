@@ -90,14 +90,14 @@ public class ClientSessionTests
 
         // Start the client session in the background
         var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
-        _ = Task.Run(() => _clientSession.StartAsync(cts.Token));
+        _ = Task.Run(() => _clientSession.StartAsync(cts.Token), cts.Token);
 
         // Act
         byte[] messageBytes = Encoding.UTF8.GetBytes(testMessage);
         _clientSocket!.Send(messageBytes);
 
         // Wait for the message to be processed with timeout
-        Task timeoutTask = Task.Delay(TimeSpan.FromSeconds(5));
+        Task timeoutTask = Task.Delay(TimeSpan.FromSeconds(5), cts.Token);
         Task completedTask = await Task.WhenAny(receiveTcs.Task, timeoutTask);
 
         // Assert
@@ -118,13 +118,13 @@ public class ClientSessionTests
 
         // Start the client session in the background
         var cts = new CancellationTokenSource();
-        _ = Task.Run(() => _clientSession.StartAsync(cts.Token));
+        _ = Task.Run(() => _clientSession.StartAsync(cts.Token), cts.Token);
 
         // Act
         _clientSocket!.Close(); // Force disconnect
 
         // Wait for disconnect event with timeout
-        Task timeoutTask = Task.Delay(TimeSpan.FromSeconds(5));
+        Task timeoutTask = Task.Delay(TimeSpan.FromSeconds(5), cts.Token);
         Task completedTask = await Task.WhenAny(disconnectTcs.Task, timeoutTask);
 
         // Assert
@@ -153,14 +153,14 @@ public class ClientSessionTests
 
         // Start the client session in the background
         var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
-        _ = Task.Run(() => _clientSession.StartAsync(cts.Token));
+        _ = Task.Run(() => _clientSession.StartAsync(cts.Token), cts.Token);
 
         // Act - send all messages at once
         byte[] messageBytes = Encoding.UTF8.GetBytes(string.Concat(messages));
         _clientSocket!.Send(messageBytes);
 
         // Wait for all messages with timeout
-        Task timeoutTask = Task.Delay(TimeSpan.FromSeconds(5));
+        Task timeoutTask = Task.Delay(TimeSpan.FromSeconds(5), cts.Token);
         Task completedTask = await Task.WhenAny(allMessagesTcs.Task, timeoutTask);
 
         // Assert
@@ -182,10 +182,10 @@ public class ClientSessionTests
         {
             Debug.Assert(_clientSession != null);
             return _clientSession.StartAsync(cts.Token);
-        });
+        }, cts.Token);
         
         // Give the session time to start
-        await Task.Delay(100);
+        await Task.Delay(100, cts.Token);
         
         // Act - Stop the session
         Debug.Assert(_clientSession != null);
@@ -230,10 +230,10 @@ public class ClientSessionTests
 
         // Start the session
         var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
-        _ = Task.Run(() => _clientSession.StartAsync(cts.Token));
+        _ = Task.Run(() => _clientSession.StartAsync(cts.Token), cts.Token);
         
         // Give the session time to start
-        await Task.Delay(100);
+        await Task.Delay(100, cts.Token);
         
         // Act - Send the oversized message
         Debug.Assert(_clientSocket != null);

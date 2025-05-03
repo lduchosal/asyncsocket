@@ -96,10 +96,10 @@ namespace Tests.ClientSessionTest
 
             
             // Act
-            localCts.Cancel();
+            await localCts.CancelAsync();
             
             // Wait for the session to shut down
-            await Task.WhenAny(sessionTask, Task.Delay(1000));
+            await Task.WhenAny(sessionTask, Task.Delay(1000, localCts.Token));
             
             // Assert
             Assert.IsTrue(disconnectEventRaised, "Disconnected event should be raised on cancellation");
@@ -133,10 +133,10 @@ namespace Tests.ClientSessionTest
             await session.SendAsync("Test message\n");
 
             // Act
-            localCts.Cancel();
+            await localCts.CancelAsync();
             
             // Wait for the session to shut down
-            await Task.WhenAny(sessionTask, Task.Delay(1000));
+            await Task.WhenAny(sessionTask, Task.Delay(1000, localCts.Token));
             
             // Assert
             Assert.IsTrue(disconnectEventRaised, "Disconnected event should be raised on cancellation");

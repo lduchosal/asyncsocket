@@ -86,10 +86,10 @@ public class AsyncTcpServerTests
         await using var server = new AsyncTcpServer(config, framingFactory);
         var cts = new CancellationTokenSource();
         var serverTask = server.RunAsync(cts.Token);
-        await Task.Delay(1000); // Allow server to initialize
+        await Task.Delay(1000, cts.Token); // Allow server to initialize
 
         var clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-        await clientSocket.ConnectAsync(ServerIp, ServerPort);
+        await clientSocket.ConnectAsync(ServerIp, ServerPort, cts.Token);
 
         // Act
         string testMessage = "Hello, Server!";
@@ -192,10 +192,10 @@ public class AsyncTcpServerTests
         await using var server = new AsyncTcpServer(config, framingFactory);
         var cts = new CancellationTokenSource();
         var serverTask = server.RunAsync(cts.Token);
-        await Task.Delay(100); // Allow server to initialize
+        await Task.Delay(100, cts.Token); // Allow server to initialize
 
         var clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-        await clientSocket.ConnectAsync(ServerIp, ServerPort);
+        await clientSocket.ConnectAsync(ServerIp, ServerPort, cts.Token);
 
         // Act
         byte[] sendBuffer = Encoding.UTF8.GetBytes(message);

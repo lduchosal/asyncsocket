@@ -303,7 +303,7 @@ public class SocketAsyncEventArgsPoolMultithreadingTests
                     // Add some randomness
                     if (j % 10 == 0)
                     {
-                        Task.Delay(1);
+                        Task.Delay(1, cancellationTokenSource.Token);
                     }
                 }
             }, cancellationTokenSource.Token);
@@ -330,7 +330,7 @@ public class SocketAsyncEventArgsPoolMultithreadingTests
                         Thread.Yield();
                     }
                 }
-            });
+            }, cancellationTokenSource.Token);
         }
             
         // Wait for producers to finish
@@ -339,11 +339,11 @@ public class SocketAsyncEventArgsPoolMultithreadingTests
         // Give consumers time to process remaining items
         while (!queue.IsEmpty)
         {
-            await Task.Delay(10);
+            await Task.Delay(10, cancellationTokenSource.Token);
         }
             
         // Stop consumers
-        cancellationTokenSource.Cancel();
+        await cancellationTokenSource.CancelAsync();
         await Task.WhenAll(consumerTasks);
             
         // Assert

@@ -227,8 +227,8 @@ public class ClientSessionStressTests
         stopwatch.Stop();
             
         // Give receiver time to process remaining messages
-        await Task.Delay(2000);
-        receiverCts.Cancel();
+        await Task.Delay(2000, receiverCts.Token);
+        await receiverCts.CancelAsync();
             
         // Assert
         double elapsedSeconds = stopwatch.ElapsedMilliseconds / 1000.0;
@@ -248,7 +248,7 @@ public class ClientSessionStressTests
         // Clean up
         await session.StopAsync();
         clientSocket.Close();
-        await Task.WhenAny(sessionTask, Task.Delay(1000));
+        await Task.WhenAny(sessionTask, Task.Delay(1000, receiverCts.Token));
     }
 
     [TestMethod]
@@ -534,7 +534,7 @@ public class ClientSessionStressTests
             return client;
         });
             
-        Socket serverSocket = listener.AcceptSocket();
+        Socket serverSocket = await listener.AcceptSocketAsync();
         serverSocket.NoDelay = true; // Disable Nagle's algorithm
             
         TcpClient client = await clientTask;

@@ -53,15 +53,15 @@ public class AsyncTcpServerConcurrencyTests
 
                 // Send a message and verify response
                 string message = $"Hello from client {i}";
-                byte[] data = Encoding.UTF8.GetBytes(message + "\n");
+                ReadOnlyMemory<byte> data = Encoding.UTF8.GetBytes(message + "\n");
 
                 var stream = client.GetStream();
-                await stream.WriteAsync(data, 0, data.Length);
+                await stream.WriteAsync(data, cts.Token);
 
                 // Read response
-                byte[] buffer = new byte[1024];
-                int bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length, cts.Token);
-                string response = Encoding.UTF8.GetString(buffer, 0, bytesRead);
+                Memory<byte> buffer = new byte[1024];
+                int bytesRead = await stream.ReadAsync(buffer, cts.Token);
+                string response = Encoding.UTF8.GetString(buffer.ToArray(), 0, bytesRead);
 
                 Assert.IsTrue(response.Contains(message));
             }, cts.Token));
@@ -98,7 +98,7 @@ public class AsyncTcpServerConcurrencyTests
         for (int i = 0; i < maxConnections; i++)
         {
             var client = new TcpClient();
-            await client.ConnectAsync(ServerIp, _port);
+            await client.ConnectAsync(ServerIp, _port, cts.Token);
             initialClients.Add(client);
         }
 
@@ -112,7 +112,7 @@ public class AsyncTcpServerConcurrencyTests
         initialClients.RemoveRange(0, disconnectCount);
 
         // Allow time for server to process disconnections
-        await Task.Delay(200);
+        await Task.Delay(200, cts.Token);
 
         // Phase 3: Connect new clients to fill newly available slots
         var newClients = new List<TcpClient>();
@@ -123,13 +123,13 @@ public class AsyncTcpServerConcurrencyTests
             connectionTasks.Add(Task.Run(async () =>
             {
                 var client = new TcpClient();
-                await client.ConnectAsync(ServerIp, _port);
+                await client.ConnectAsync(ServerIp, _port, cts.Token);
 
                 lock (newClients)
                 {
                     newClients.Add(client);
                 }
-            }));
+            }, cts.Token));
         }
 
         // Wait for all connect attempts with timeout
@@ -235,13 +235,13 @@ public class AsyncTcpServerConcurrencyTests
 
             sendTasks.Add(Task.Run(async () =>
             {
-                byte[] data = Encoding.UTF8.GetBytes(message + "\n");
+                ReadOnlyMemory<byte> data = Encoding.UTF8.GetBytes(message + "\n");
 
-                await stream.WriteAsync(data, 0, data.Length);
+                await stream.WriteAsync(data, cts.Token);
 
-                byte[] buffer = new byte[1024];
-                int bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length, cts.Token);
-                string response = Encoding.UTF8.GetString(buffer, 0, bytesRead);
+                Memory<byte> buffer = new byte[1024];
+                int bytesRead = await stream.ReadAsync(buffer, cts.Token);
+                string response = Encoding.UTF8.GetString(buffer.ToArray(), 0, bytesRead);
 
                 lock (messageLock)
                 {

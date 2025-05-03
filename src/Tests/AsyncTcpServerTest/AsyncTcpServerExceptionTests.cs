@@ -25,8 +25,8 @@ public class AsyncTcpServerExceptionTests
         var serverTask = server.RunAsync(cts.Token);
 
         // Trigger cancellation after a short delay
-        await Task.Delay(100);
-        cts.Cancel();
+        await Task.Delay(100, cts.Token);
+        await cts.CancelAsync();
 
         await Assert.ThrowsExceptionAsync<OperationCanceledException>(
             async () => await serverTask);
@@ -58,7 +58,7 @@ public class AsyncTcpServerExceptionTests
         var task1 = server1.RunAsync(cts1.Token);
 
         // Wait a moment for the first server to start
-        await Task.Delay(100);
+        await Task.Delay(100, cts1.Token);
 
         // Second server trying to use the same port
         AsyncTcpServer server2 = new(config, framingFactory);
@@ -69,7 +69,7 @@ public class AsyncTcpServerExceptionTests
             async () => await server2.RunAsync(cts2.Token));
 
         // Cleanup
-        cts1.Cancel();
+        await cts1.CancelAsync();
         try
         {
             await task1;
