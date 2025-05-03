@@ -304,7 +304,7 @@ public class AsyncTcpServerTests
         try
         {
             Console.WriteLine(
-                $"  Linger State: Enabled={clientSocket.LingerState.Enabled}, Linger Seconds={clientSocket.LingerState.LingerTime}");
+                $"  Linger State: Enabled={clientSocket.LingerState!.Enabled}, Linger Seconds={clientSocket.LingerState.LingerTime}");
         }
         catch (Exception ex)
         {

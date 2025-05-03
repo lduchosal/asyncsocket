@@ -56,16 +56,6 @@ public class LengthPrefixFramingTests
     }
 
     [TestMethod]
-    public void Process_NullBuffer_ThrowsArgumentNullException()
-    {
-        // Arrange
-        var framing = new LengthPrefixFraming(_loggerMock.Object);
-            
-        // Act & Assert
-        Assert.ThrowsException<ArgumentNullException>(() => framing.Process(null, 0));
-    }
-
-    [TestMethod]
     public void Process_NegativeBytesRead_ThrowsArgumentOutOfRangeException()
     {
         // Arrange

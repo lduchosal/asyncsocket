@@ -115,7 +115,7 @@ public class SocketAsyncEventArgsPoolScalabilityTests
             
         // Act - Test pool under different fill conditions
         stopwatch.Start();
-        ConcurrentBag<SocketAsyncEventArgs> collector = new();
+        ConcurrentBag<SocketAsyncEventArgs?> collector = new();
         // Phase 1: Empty pool - measure Get performance
         await RunConcurrentOperations(10, 100, () =>
         {
@@ -130,14 +130,14 @@ public class SocketAsyncEventArgsPoolScalabilityTests
         }, collector);
             
         // Fill the pool
-        var items = new ConcurrentBag<SocketAsyncEventArgs>();
+        var items = new ConcurrentBag<SocketAsyncEventArgs?>();
         for (int i = 0; i < 1000; i++)
         {
             items.Add(pool.Get());
         }
         foreach (var item in items)
         {
-            pool.Return((SocketAsyncEventArgs)item);
+            pool.Return((SocketAsyncEventArgs)item!);
         }
             
         // Phase 2: Full pool - measure Get performance
@@ -158,8 +158,9 @@ public class SocketAsyncEventArgsPoolScalabilityTests
         await RunConcurrentOperations(10, 100, () =>
         {
             items.TryPeek(out var args);
+            Debug.Assert(args != null, nameof(args) + " != null");
+
             items.TakeLast(1);
-                
             var sw = Stopwatch.StartNew();
             pool.Return(args);
             sw.Stop();
@@ -391,7 +392,7 @@ public class SocketAsyncEventArgsPoolScalabilityTests
         
     // Helper method to run concurrent operations
     private async Task RunConcurrentOperations(int threadCount, int opsPerThread, 
-        Func<SocketAsyncEventArgs> operation, ConcurrentBag<SocketAsyncEventArgs> collector)
+        Func<SocketAsyncEventArgs?> operation, ConcurrentBag<SocketAsyncEventArgs?> collector)
     {
         var tasks = new Task[threadCount];
             
@@ -399,7 +400,7 @@ public class SocketAsyncEventArgsPoolScalabilityTests
         {
             tasks[t] = Task.Run(() =>
             {
-                var threadItems = new List<SocketAsyncEventArgs>();
+                var threadItems = new List<SocketAsyncEventArgs?>();
                     
                 for (int i = 0; i < opsPerThread; i++)
                 {

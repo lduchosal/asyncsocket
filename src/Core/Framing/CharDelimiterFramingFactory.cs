@@ -2,10 +2,6 @@ using Microsoft.Extensions.Logging;
 
 namespace AsyncSocket.Framing;
 
-public interface IMessageFramingFactory<T>
-{
-    public IMessageFraming<T> CreateFraming();
-}
 public class CharDelimiterFramingFactory(
     char delimiter = '\n', 
     int maxSizeWithoutADelimiter = 1024, 

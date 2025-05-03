@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using AsyncSocket.Framing;
@@ -16,7 +17,7 @@ public abstract class AsyncServer<T> : IAsyncDisposable
     private readonly Socket _listener;
     private readonly ConcurrentDictionary<Guid, ClientSession<T>> _clients = new();
     private readonly SemaphoreSlim _maxConnectionsSemaphore;
-    private readonly SocketAsyncEventArgsPool _argsPool = new();
+    private readonly SocketAsyncEventArgsPool? _argsPool = new();
     private readonly int _maxConnection;
     private readonly int _bufferSize;
 
@@ -147,6 +148,7 @@ public abstract class AsyncServer<T> : IAsyncDisposable
         _clients.Clear();
 
         _maxConnectionsSemaphore.Dispose();
+        Debug.Assert(_argsPool != null, nameof(_argsPool) + " != null");
         _argsPool.Dispose();
 
         _logger?.LogDebug("Server stopped.");

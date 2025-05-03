@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Net.Sockets;
 using System.Text;
 using AsyncSocket.Framing;
@@ -12,7 +13,7 @@ public class ClientSession<T>(
     Socket socket,
     IMessageFraming<T> messageFraming,
     int bufferSize,
-    ISocketAsyncEventArgsPool argsPool)
+    ISocketAsyncEventArgsPool? argsPool)
 {
     public Guid Id { get; } = id;
     private readonly byte[] _receiveBuffer = new byte[bufferSize];
@@ -24,7 +25,7 @@ public class ClientSession<T>(
     public event EventHandler<T> MessageReceived = delegate { };
     public event EventHandler<Guid> Disconnected = delegate { };
 
-    public ClientSession(Guid id, Socket socket, IMessageFraming<T> messageFraming, int bufferSize, ISocketAsyncEventArgsPool argsPool)
+    public ClientSession(Guid id, Socket socket, IMessageFraming<T> messageFraming, int bufferSize, ISocketAsyncEventArgsPool? argsPool)
     :this(null, id, socket, messageFraming, bufferSize, argsPool)
     {
     }
@@ -86,6 +87,7 @@ public class ClientSession<T>(
 
     private async Task ReceiveLoopAsync(CancellationToken cancellationToken)
     {
+        Debug.Assert(argsPool != null, nameof(argsPool) + " != null");
         var args = argsPool.Get();
         args.SetBuffer(_receiveBuffer, 0, _receiveBuffer.Length);
             
@@ -111,6 +113,7 @@ public class ClientSession<T>(
                     break;
                 }
 
+                Debug.Assert(messageFraming != null, nameof(messageFraming) + " != null");
                 bool processSucceed = messageFraming.Process(_receiveBuffer, bytesRead);
                 // Check if buffer exceeds limit without finding a framing delimiter
                 if (!processSucceed)
@@ -163,6 +166,7 @@ public class ClientSession<T>(
         ClientException.ThrowIf(!IsRunning, "not running");
             
         byte[] data = Encoding.UTF8.GetBytes(message);
+        Debug.Assert(argsPool != null, nameof(argsPool) + " != null");
         var args = argsPool.Get();
         args.SetBuffer(data, 0, data.Length);
             

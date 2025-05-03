@@ -64,7 +64,7 @@ public class SocketAsyncEventArgsPoolStressTests
             await Task.WhenAll(tasks);
 
         }
-        catch (Exception e)
+        catch (Exception)
         {
             exception = true;
         }

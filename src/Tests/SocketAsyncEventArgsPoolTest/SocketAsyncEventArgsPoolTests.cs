@@ -58,7 +58,6 @@ public class SocketAsyncEventArgsPoolTests
         // Arrange
         var pool = new SocketAsyncEventArgsPool();
         var args = new SocketAsyncEventArgs();
-        bool disposeCalled = false;
             
         // We need to track when Dispose is called on our args
         // This is a bit tricky as SocketAsyncEventArgs doesn't have a simple way to check if disposed

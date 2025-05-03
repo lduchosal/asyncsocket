@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -13,10 +14,10 @@ public class ClientSessionTests
     private const int BufferSize = 1024;
     private const int MaxSiteWithoutADelimiter = 1024;
     private const char Delimiter = '\n';
-    private Socket _serverSocket;
-    private Socket _clientSocket;
-    private SocketAsyncEventArgsPool _argsPool;
-    private ClientSession<string> _clientSession;
+    private Socket? _serverSocket;
+    private Socket? _clientSocket;
+    private SocketAsyncEventArgsPool? _argsPool;
+    private ClientSession<string>? _clientSession;
     private readonly IPEndPoint _endpoint = new (IPAddress.Loopback, 0);
     private readonly CancellationTokenSource _cts = new (TimeSpan.FromSeconds(5));
 
@@ -29,7 +30,7 @@ public class ClientSessionTests
         _serverSocket.Listen(1);
 
         _clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-        _clientSocket.Connect((IPEndPoint)_serverSocket.LocalEndPoint);
+        _clientSocket.Connect((IPEndPoint)_serverSocket.LocalEndPoint!);
             
         Socket acceptedSocket = _serverSocket.Accept();
             
@@ -58,14 +59,15 @@ public class ClientSessionTests
         byte[] buffer = new byte[BufferSize];
 
         // Start the client session and wait for it to be ready
-        _clientSession.StartAsync(_cts.Token);
+        Debug.Assert(_clientSession != null, nameof(_clientSession) + " != null");
+        var clientTask = _clientSession.StartAsync(_cts.Token);
     
         // Act
         await _clientSession.SendAsync(testMessage);
     
         // Use async receive with timeout instead of blocking call
         var receiveTask = Task.Run(() => {
-            int bytesRead = _clientSocket.Receive(buffer);
+            int bytesRead = _clientSocket!.Receive(buffer);
             return Encoding.UTF8.GetString(buffer, 0, bytesRead);
         }, _cts.Token);
     
@@ -81,7 +83,7 @@ public class ClientSessionTests
         string testMessage = "Test message\n";
         var receiveTcs = new TaskCompletionSource<string>();
             
-        _clientSession.MessageReceived += (sender, message) => 
+        _clientSession!.MessageReceived += (sender, message) => 
         {
             receiveTcs.TrySetResult(message);
         };
@@ -92,7 +94,7 @@ public class ClientSessionTests
 
         // Act
         byte[] messageBytes = Encoding.UTF8.GetBytes(testMessage);
-        _clientSocket.Send(messageBytes);
+        _clientSocket!.Send(messageBytes);
 
         // Wait for the message to be processed with timeout
         Task timeoutTask = Task.Delay(TimeSpan.FromSeconds(5));
@@ -109,7 +111,7 @@ public class ClientSessionTests
         // Arrange
         var disconnectTcs = new TaskCompletionSource<Guid>();
             
-        _clientSession.Disconnected += (sender, id) => 
+        _clientSession!.Disconnected += (sender, id) => 
         {
             disconnectTcs.TrySetResult(id);
         };
@@ -119,7 +121,7 @@ public class ClientSessionTests
         _ = Task.Run(() => _clientSession.StartAsync(cts.Token));
 
         // Act
-        _clientSocket.Close(); // Force disconnect
+        _clientSocket!.Close(); // Force disconnect
 
         // Wait for disconnect event with timeout
         Task timeoutTask = Task.Delay(TimeSpan.FromSeconds(5));
@@ -137,7 +139,8 @@ public class ClientSessionTests
         var messages = new string[] { "Message1\n", "Message2\n", "Message3\n" };
         var receivedMessages = new List<string>();
         var allMessagesTcs = new TaskCompletionSource<bool>();
-            
+
+        Debug.Assert(_clientSession != null, nameof(_clientSession) + " != null");
         _clientSession.MessageReceived += (sender, message) => 
         {
             lock (receivedMessages)
@@ -154,7 +157,7 @@ public class ClientSessionTests
 
         // Act - send all messages at once
         byte[] messageBytes = Encoding.UTF8.GetBytes(string.Concat(messages));
-        _clientSocket.Send(messageBytes);
+        _clientSocket!.Send(messageBytes);
 
         // Wait for all messages with timeout
         Task timeoutTask = Task.Delay(TimeSpan.FromSeconds(5));
@@ -175,12 +178,17 @@ public class ClientSessionTests
         
         // Start the session
         var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
-        _ = Task.Run(() => _clientSession.StartAsync(cts.Token));
+        _ = Task.Run(() =>
+        {
+            Debug.Assert(_clientSession != null, nameof(_clientSession) + " != null");
+            return _clientSession.StartAsync(cts.Token);
+        });
         
         // Give the session time to start
         await Task.Delay(100);
         
         // Act - Stop the session
+        Debug.Assert(_clientSession != null, nameof(_clientSession) + " != null");
         await _clientSession.StopAsync();
 
         await Assert.ThrowsExceptionAsync<ClientException>(async () =>
@@ -191,6 +199,7 @@ public class ClientSessionTests
         
         // Assert - The client socket should receive nothing
         byte[] buffer = new byte[BufferSize];
+        Debug.Assert(_clientSocket != null, nameof(_clientSocket) + " != null");
         _clientSocket.ReceiveTimeout = 1000; // 1 second timeout
         
         try
@@ -212,7 +221,8 @@ public class ClientSessionTests
         string oversizedMessage = new string('A', BufferSize + 100); // No delimiter
         
         var disconnectedTcs = new TaskCompletionSource<Guid>();
-        
+
+        Debug.Assert(_clientSession != null, nameof(_clientSession) + " != null");
         _clientSession.Disconnected += (sender, id) => 
         {
             disconnectedTcs.SetResult(id);
@@ -226,6 +236,7 @@ public class ClientSessionTests
         await Task.Delay(100);
         
         // Act - Send the oversized message
+        Debug.Assert(_clientSocket != null, nameof(_clientSocket) + " != null");
         _clientSocket.Send(Encoding.UTF8.GetBytes(oversizedMessage));
         
         // Assert - Session should disconnect due to buffer overflow

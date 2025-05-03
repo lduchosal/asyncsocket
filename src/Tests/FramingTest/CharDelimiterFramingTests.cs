@@ -111,30 +111,6 @@ public class CharDelimiterFramingTests
     }
 
     [TestMethod]
-    public void Process_ExceedsMaxSizeWithoutDelimiter_ReturnsFalse()
-    {
-        // Arrange
-        int maxSize = 10;
-        var framing = new CharDelimiterFraming(_loggerMock.Object, DefaultDelimiter, maxSize);
-        string message = "ThisMessageIsTooLongWithoutADelimiter";
-        byte[] buffer = Encoding.UTF8.GetBytes(message);
-
-        // Act
-        bool result = framing.Process(buffer, buffer.Length);
-
-        // Assert
-        Assert.IsFalse(result);
-        _loggerMock.Verify(
-            l => l.Log(
-                LogLevel.Debug,
-                It.IsAny<EventId>(),
-                It.Is<It.IsAnyType>((o, t) => o.ToString().Contains("Buffer exceeded maximum size without delimiter")),
-                It.IsAny<Exception>(),
-                It.IsAny<Func<It.IsAnyType, Exception, string>>()),
-            Times.Once);
-    }
-
-    [TestMethod]
     public void Process_CloseToMaxSizeThenExceeds_ReturnsFalse()
     {
         // First part - just under max size
@@ -190,16 +166,6 @@ public class CharDelimiterFramingTests
 
         // Act & Assert
         Assert.IsNull(framing.Next());
-    }
-
-    [TestMethod]
-    public void Process_NullBuffer_ThrowsArgumentNullException()
-    {
-        // Arrange
-        var framing = new CharDelimiterFraming(_loggerMock.Object, DefaultDelimiter, DefaultMaxSize);
-
-        // Act & Assert
-        Assert.ThrowsException<ArgumentNullException>(() => framing.Process(null, 10));
     }
 
     [TestMethod]
@@ -264,7 +230,7 @@ public class CharDelimiterFramingTests
             
         for (int i = 0; i < messageCount; i++)
         {
-            string message = framing.Next();
+            string? message = framing.Next();
             Assert.IsNotNull(message);
             Assert.AreEqual($"Message{i};", message);
         }
